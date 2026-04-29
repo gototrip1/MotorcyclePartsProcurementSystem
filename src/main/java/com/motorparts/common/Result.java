@@ -1,20 +1,12 @@
 package com.motorparts.common;
 
 import com.motorparts.common.enums.ResultCode;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 /**
  * 统一响应结果
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,118 +31,96 @@ public class Result<T> implements Serializable {
      */
     private Long timestamp;
 
-    /**
-     * 成功响应（无数据）
-     */
+    public Result() {
+    }
+
+    public Result(Integer code, String message, T data, Long timestamp) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.timestamp = timestamp;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public static <T> Result<T> success() {
         return success(null);
     }
 
-    /**
-     * 成功响应（有数据）
-     */
     public static <T> Result<T> success(T data) {
-        return Result.<T>builder()
-                .code(ResultCode.SUCCESS.getCode())
-                .message(ResultCode.SUCCESS.getMessage())
-                .data(data)
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data, System.currentTimeMillis());
     }
 
-    /**
-     * 失败响应
-     */
     public static <T> Result<T> error() {
         return error(ResultCode.ERROR);
     }
 
-    /**
-     * 失败响应（指定错误码）
-     */
     public static <T> Result<T> error(ResultCode resultCode) {
-        return Result.<T>builder()
-                .code(resultCode.getCode())
-                .message(resultCode.getMessage())
-                .data(null)
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new Result<>(resultCode.getCode(), resultCode.getMessage(), null, System.currentTimeMillis());
     }
 
-    /**
-     * 失败响应（自定义消息）
-     */
     public static <T> Result<T> error(String message) {
-        return Result.<T>builder()
-                .code(ResultCode.ERROR.getCode())
-                .message(message)
-                .data(null)
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new Result<>(ResultCode.ERROR.getCode(), message, null, System.currentTimeMillis());
     }
 
-    /**
-     * 失败响应（指定错误码和自定义消息）
-     */
     public static <T> Result<T> error(ResultCode resultCode, String message) {
-        return Result.<T>builder()
-                .code(resultCode.getCode())
-                .message(message)
-                .data(null)
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new Result<>(resultCode.getCode(), message, null, System.currentTimeMillis());
     }
 
-    /**
-     * 失败响应（指定错误码和自定义消息）
-     */
     public static <T> Result<T> error(Integer code, String message) {
-        return Result.<T>builder()
-                .code(code)
-                .message(message)
-                .data(null)
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new Result<>(code, message, null, System.currentTimeMillis());
     }
 
-    /**
-     * 参数错误响应
-     */
     public static <T> Result<T> paramError() {
         return error(ResultCode.PARAM_ERROR);
     }
 
-    /**
-     * 参数错误响应（自定义消息）
-     */
     public static <T> Result<T> paramError(String message) {
         return error(ResultCode.PARAM_ERROR, message);
     }
 
-    /**
-     * 未授权响应
-     */
     public static <T> Result<T> unauthorized() {
         return error(ResultCode.UNAUTHORIZED);
     }
 
-    /**
-     * 禁止访问响应
-     */
     public static <T> Result<T> forbidden() {
         return error(ResultCode.FORBIDDEN);
     }
 
-    /**
-     * 资源不存在响应
-     */
     public static <T> Result<T> notFound() {
         return error(ResultCode.NOT_FOUND);
     }
 
-    /**
-     * 服务器内部错误响应
-     */
     public static <T> Result<T> serverError() {
         return error(ResultCode.SERVER_ERROR);
     }

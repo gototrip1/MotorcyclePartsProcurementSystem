@@ -1,13 +1,8 @@
 package com.motorparts.common.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * 供应商状态枚举
  */
-@Getter
-@AllArgsConstructor
 public enum SupplierStatusEnum {
 
     /**
@@ -27,6 +22,19 @@ public enum SupplierStatusEnum {
 
     private final Integer code;
     private final String description;
+
+    SupplierStatusEnum(Integer code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     /**
      * 根据code获取枚举

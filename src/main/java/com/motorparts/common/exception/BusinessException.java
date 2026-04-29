@@ -1,12 +1,10 @@
 package com.motorparts.common.exception;
 
 import com.motorparts.common.enums.ResultCode;
-import lombok.Getter;
 
 /**
  * 业务异常
  */
-@Getter
 public class BusinessException extends RuntimeException {
 
     private final Integer code;
@@ -29,5 +27,9 @@ public class BusinessException extends RuntimeException {
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
         this.code = ResultCode.BUSINESS_ERROR.getCode();
+    }
+
+    public Integer getCode() {
+        return code;
     }
 }

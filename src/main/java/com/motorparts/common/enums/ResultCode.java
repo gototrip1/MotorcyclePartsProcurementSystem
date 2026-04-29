@@ -1,13 +1,8 @@
 package com.motorparts.common.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * 响应码枚举
  */
-@Getter
-@AllArgsConstructor
 public enum ResultCode {
 
     /**
@@ -84,4 +79,17 @@ public enum ResultCode {
      * 响应消息
      */
     private final String message;
+
+    ResultCode(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

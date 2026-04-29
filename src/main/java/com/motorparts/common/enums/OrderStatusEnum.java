@@ -1,13 +1,8 @@
 package com.motorparts.common.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * 订单状态枚举
  */
-@Getter
-@AllArgsConstructor
 public enum OrderStatusEnum {
 
     /**
@@ -37,6 +32,19 @@ public enum OrderStatusEnum {
 
     private final Integer code;
     private final String description;
+
+    OrderStatusEnum(Integer code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     /**
      * 根据code获取枚举

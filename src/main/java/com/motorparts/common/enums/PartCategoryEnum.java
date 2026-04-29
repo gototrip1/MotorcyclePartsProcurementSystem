@@ -1,13 +1,8 @@
 package com.motorparts.common.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * 零件分类枚举
  */
-@Getter
-@AllArgsConstructor
 public enum PartCategoryEnum {
 
     /**
@@ -42,6 +37,19 @@ public enum PartCategoryEnum {
 
     private final String code;
     private final String description;
+
+    PartCategoryEnum(String code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     /**
      * 根据code获取枚举

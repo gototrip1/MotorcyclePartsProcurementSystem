@@ -3,7 +3,6 @@ package com.motorparts.init;
 import com.motorparts.entity.*;
 import com.motorparts.mapper.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -17,15 +16,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 数据库初始化器
  * 启动时自动创建表结构并插入模拟数据
  */
-@Slf4j
 @Component("databaseInitializer")
 @RequiredArgsConstructor
 public class DatabaseInitializer implements ApplicationRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(DatabaseInitializer.class);
 
     private final JdbcTemplate jdbcTemplate;
 

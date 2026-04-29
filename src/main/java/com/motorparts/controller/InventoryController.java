@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.motorparts.common.PageResult;
 import com.motorparts.common.Result;
 import com.motorparts.common.enums.ResultCode;
+import com.motorparts.dto.InventoryWithPart;
 import com.motorparts.entity.Inventory;
 import com.motorparts.service.InventoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +36,8 @@ public class InventoryController {
      */
     @Operation(summary = "获取库存记录")
     @GetMapping("/get/{id}")
-    public Result<Inventory> getById(@Parameter(description = "库存ID") @PathVariable Long id) {
-        Inventory inventory = inventoryService.getById(id);
+    public Result<InventoryWithPart> getById(@Parameter(description = "库存ID") @PathVariable Long id) {
+        InventoryWithPart inventory = inventoryService.getInventoryWithPart(id);
         if (inventory == null) {
             return Result.error(ResultCode.DATA_NOT_EXISTS);
         }
@@ -47,13 +49,13 @@ public class InventoryController {
      */
     @Operation(summary = "分页查询库存")
     @GetMapping("/page")
-    public Result<PageResult<Inventory>> page(
+    public Result<PageResult<InventoryWithPart>> page(
             @Parameter(description = "当前页码") @RequestParam(defaultValue = "1") Long current,
             @Parameter(description = "每页大小") @RequestParam(defaultValue = "10") Long size,
             @Parameter(description = "零件名称") @RequestParam(required = false) String partName,
             @Parameter(description = "仓库位置") @RequestParam(required = false) String warehouseLocation) {
         Page<Inventory> page = new Page<>(current, size);
-        Page<Inventory> result = inventoryService.pageInventories(page, partName, warehouseLocation);
+        Page<InventoryWithPart> result = inventoryService.pageInventoriesWithPart(page, partName, warehouseLocation);
         return Result.success(PageResult.from(result));
     }
 
@@ -93,8 +95,8 @@ public class InventoryController {
      */
     @Operation(summary = "获取库存预警列表")
     @GetMapping("/warning")
-    public Result<List<Inventory>> getWarningList() {
-        List<Inventory> list = inventoryService.getWarningList();
+    public Result<List<InventoryWithPart>> getWarningList() {
+        List<InventoryWithPart> list = inventoryService.getWarningListWithPart();
         return Result.success(list);
     }
 
@@ -131,15 +133,25 @@ public class InventoryController {
         // 统计各类状态
         long totalItems = allInventory.size();
         long warningItems = allInventory.stream()
-                .filter(inv -> inv.getCurrentQuantity() <= inv.getSafetyStock())
+                .filter(inv -> inv.getCurrentQuantity() != null && inv.getSafetyStock() != null
+                        && inv.getCurrentQuantity() <= inv.getSafetyStock())
                 .count();
         long normalItems = totalItems - warningItems;
+
+        // 转换为带零部件信息的列表
+        List<InventoryWithPart> inventoryWithParts = new ArrayList<>();
+        for (Inventory inv : allInventory) {
+            InventoryWithPart iwp = inventoryService.getInventoryWithPart(inv.getId());
+            if (iwp != null) {
+                inventoryWithParts.add(iwp);
+            }
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("totalItems", totalItems);
         result.put("warningItems", warningItems);
         result.put("normalItems", normalItems);
-        result.put("inventoryList", allInventory);
+        result.put("inventoryList", inventoryWithParts);
 
         return Result.success(result);
     }

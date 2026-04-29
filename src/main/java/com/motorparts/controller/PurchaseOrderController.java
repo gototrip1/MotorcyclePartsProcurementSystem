@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.motorparts.common.PageResult;
 import com.motorparts.common.Result;
 import com.motorparts.common.enums.ResultCode;
+import com.motorparts.dto.OrderDetailWithPartAndSupplier;
 import com.motorparts.entity.OrderDetail;
 import com.motorparts.entity.OrderDetailWithPart;
 import com.motorparts.entity.Part;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +50,7 @@ public class PurchaseOrderController {
      */
     @Operation(summary = "创建采购订单")
     @PostMapping("/create")
-    public Result<PurchaseOrder> create(@Valid @RequestBody PurchaseOrder order) {
+    public Result<PurchaseOrderWithDetails> create(@Valid @RequestBody PurchaseOrderWithDetails order) {
         boolean success = purchaseOrderService.createOrder(order);
         if (!success) {
             return Result.error(ResultCode.DATA_EXISTS);
@@ -60,9 +63,9 @@ public class PurchaseOrderController {
      */
     @Operation(summary = "更新采购订单")
     @PutMapping("/update/{id}")
-    public Result<PurchaseOrder> update(
+    public Result<PurchaseOrderWithDetails> update(
             @Parameter(description = "订单ID") @PathVariable Long id,
-            @Valid @RequestBody PurchaseOrder order) {
+            @Valid @RequestBody PurchaseOrderWithDetails order) {
         order.setId(id);
         boolean success = purchaseOrderService.updateById(order);
         if (!success) {
@@ -274,5 +277,43 @@ public class PurchaseOrderController {
         result.put("completedOrders", statistics.getCompletedOrders());
         result.put("pendingOrders", statistics.getPendingOrders());
         return Result.success(result);
+    }
+
+    /**
+     * 搜索订单明细（根据零部件名称和时间范围）
+     * 时间参数支持两种格式：yyyy-MM-dd（自动补全00:00:00）或 yyyy-MM-dd HH:mm:ss
+     */
+    @Operation(summary = "搜索订单明细")
+    @GetMapping("/search-details")
+    public Result<List<OrderDetailWithPartAndSupplier>> searchOrderDetails(
+            @Parameter(description = "零部件名称（模糊匹配）") @RequestParam(required = false) String partName,
+            @Parameter(description = "开始时间（支持 yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss）") @RequestParam(required = false) String startDate,
+            @Parameter(description = "结束时间（支持 yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss）") @RequestParam(required = false) String endDate) {
+        LocalDateTime startDateTime = parseDateTime(startDate, true);
+        LocalDateTime endDateTime = parseDateTime(endDate, false);
+        List<OrderDetailWithPartAndSupplier> result = purchaseOrderService.searchOrderDetails(partName, startDateTime, endDateTime);
+        return Result.success(result);
+    }
+
+    /**
+     * 解析时间字符串，支持两种格式：
+     * - yyyy-MM-dd（自动补全00:00:00或23:59:59）
+     * - yyyy-MM-dd HH:mm:ss（直接使用）
+     */
+    private LocalDateTime parseDateTime(String dateStr, boolean isStart) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
+            return null;
+        }
+        dateStr = dateStr.trim();
+        if (dateStr.length() == 10) {
+            // 纯日期格式，补全时间
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            java.time.LocalDate date = java.time.LocalDate.parse(dateStr, formatter);
+            return isStart ? date.atStartOfDay() : date.atTime(23, 59, 59);
+        } else {
+            // 日期时间格式
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(dateStr, formatter);
+        }
     }
 }

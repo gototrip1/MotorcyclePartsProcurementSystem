@@ -2,9 +2,11 @@ package com.motorparts.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.motorparts.dto.OrderDetailWithPartAndSupplier;
 import com.motorparts.entity.PurchaseOrder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -60,4 +62,14 @@ public interface PurchaseOrderService extends IService<PurchaseOrder> {
         long getCompletedOrders();
         long getPendingOrders();
     }
+
+    /**
+     * 根据零部件名称和时间范围搜索订单明细
+     *
+     * @param partName   零部件名称（模糊匹配，可为null）
+     * @param startDate  开始时间（订单时间在此之后，可为null）
+     * @param endDate    结束时间（订单时间在此之前，可为null）
+     * @return 符合条件的订单明细列表（含零部件及供应商嵌套信息）
+     */
+    List<OrderDetailWithPartAndSupplier> searchOrderDetails(String partName, LocalDateTime startDate, LocalDateTime endDate);
 }
