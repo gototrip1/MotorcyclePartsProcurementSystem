@@ -1,7 +1,7 @@
 -- 摩托车零部件采购管理系统 - 数据库表结构
 -- 版本: 1.0.0
 -- 创建时间: 2024-01-01
--- 最后更新: 2026-04-20
+-- 最后更新: 2026-04-29
 
 -- 创建数据库
 CREATE DATABASE IF NOT EXISTS `motorparts_db`
@@ -12,7 +12,29 @@ USE `motorparts_db`;
 
 -- ==================== 表结构定义 ====================
 
--- 1. 供应商表 (supplier)
+-- 1. 用户/员工表 (user)
+-- 注意：user是MySQL关键字，需要用反引号括起来
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `username` varchar(50) NOT NULL COMMENT '用户名',
+  `password` varchar(100) NOT NULL COMMENT '密码(加密)',
+  `real_name` varchar(50) DEFAULT NULL COMMENT '真实姓名',
+  `role` varchar(50) DEFAULT 'purchase' COMMENT '角色(admin-管理员, purchase-采购员, warehouse-仓管员, sales-销售员)',
+  `department` varchar(50) DEFAULT '采购部' COMMENT '部门(采购部/仓储部/销售部/财务部)',
+  `phone` varchar(20) DEFAULT NULL COMMENT '电话',
+  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
+  `status` tinyint DEFAULT '1' COMMENT '状态(1-正常, 2-禁用)',
+  `deleted` tinyint DEFAULT '0' COMMENT '删除标志(0-未删除, 1-已删除)',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_username` (`username`),
+  KEY `idx_role` (`role`),
+  KEY `idx_department` (`department`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户/员工表';
+
+-- 2. 供应商表 (supplier)
 CREATE TABLE IF NOT EXISTS `supplier` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '供应商ID',
   `supplier_code` varchar(50) NOT NULL COMMENT '供应商编码',
@@ -33,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   KEY `idx_create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='供应商表';
 
--- 2. 产品/零部件表 (part)
+-- 3. 产品/零部件表 (part)
 CREATE TABLE IF NOT EXISTS `part` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '零部件ID',
   `part_code` varchar(50) NOT NULL COMMENT '零件编码',
@@ -58,9 +80,7 @@ CREATE TABLE IF NOT EXISTS `part` (
   CONSTRAINT `fk_part_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='产品/零部件表';
 
--- 3. 采购订单表 (purchase_order)
--- 注意：订单与供应商的关联通过订单明细表(order_detail)间接关联，
--- 每个订单可以包含多个来自不同供应商的零部件
+-- 4. 采购订单表 (purchase_order)
 CREATE TABLE IF NOT EXISTS `purchase_order` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '订单ID',
   `order_number` varchar(50) NOT NULL COMMENT '订单编号',
@@ -82,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `purchase_order` (
   CONSTRAINT `fk_order_created_by` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='采购订单表';
 
--- 4. 订单明细表 (order_detail)
+-- 5. 订单明细表 (order_detail)
 CREATE TABLE IF NOT EXISTS `order_detail` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '明细ID',
   `order_id` bigint NOT NULL COMMENT '订单ID',
@@ -102,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `order_detail` (
   CONSTRAINT `fk_detail_part` FOREIGN KEY (`part_id`) REFERENCES `part` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单明细表';
 
--- 5. 库存表 (inventory)
+-- 6. 库存表 (inventory)
 CREATE TABLE IF NOT EXISTS `inventory` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '库存ID',
   `part_id` bigint NOT NULL COMMENT '零部件ID',
@@ -121,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   CONSTRAINT `fk_inventory_part` FOREIGN KEY (`part_id`) REFERENCES `part` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存表';
 
--- 6. 客户表 (customer)
+-- 7. 客户表 (customer)
 CREATE TABLE IF NOT EXISTS `customer` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '客户ID',
   `customer_code` varchar(50) NOT NULL COMMENT '客户编码',
@@ -142,27 +162,6 @@ CREATE TABLE IF NOT EXISTS `customer` (
   KEY `idx_discount_level` (`discount_level`),
   KEY `idx_registered_time` (`registered_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='客户表';
-
--- 7. 用户/员工表 (user)
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(50) NOT NULL COMMENT '用户名',
-  `password` varchar(100) NOT NULL COMMENT '密码(加密)',
-  `real_name` varchar(50) DEFAULT NULL COMMENT '真实姓名',
-  `role` varchar(50) DEFAULT 'purchase' COMMENT '角色(admin-管理员, purchase-采购员, warehouse-仓管员, sales-销售员)',
-  `department` varchar(50) DEFAULT '采购部' COMMENT '部门(采购部/仓储部/销售部/财务部)',
-  `phone` varchar(20) DEFAULT NULL COMMENT '电话',
-  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
-  `status` tinyint DEFAULT '1' COMMENT '状态(1-正常, 2-禁用)',
-  `deleted` tinyint DEFAULT '0' COMMENT '删除标志(0-未删除, 1-已删除)',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_username` (`username`),
-  KEY `idx_role` (`role`),
-  KEY `idx_department` (`department`),
-  KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户/员工表';
 
 -- 8. 物流信息表 (logistics)
 CREATE TABLE IF NOT EXISTS `logistics` (
@@ -222,13 +221,38 @@ FROM purchase_order o
 WHERE o.deleted = 0
 GROUP BY DATE(o.order_time);
 
+-- 订单明细视图（含零部件和供应商信息）
+CREATE OR REPLACE VIEW `order_detail_full_view` AS
+SELECT
+    od.id AS detail_id,
+    od.order_id,
+    o.order_number,
+    od.part_id,
+    p.part_code,
+    p.name AS part_name,
+    p.model,
+    p.specification,
+    od.quantity,
+    od.unit_price,
+    od.subtotal,
+    p.supplier_id,
+    s.name AS supplier_name,
+    s.supplier_code,
+    od.create_time AS detail_create_time
+FROM order_detail od
+JOIN purchase_order o ON od.order_id = o.id
+JOIN part p ON od.part_id = p.id
+LEFT JOIN supplier s ON p.supplier_id = s.id
+WHERE od.deleted = 0 AND o.deleted = 0 AND p.deleted = 0;
+
 -- ==================== 索引优化 ====================
 
 -- 添加复合索引以提高查询性能
-CREATE INDEX idx_order_status_time ON purchase_order(status, order_time);
-CREATE INDEX idx_part_category_price ON part(category, purchase_price);
-CREATE INDEX idx_inventory_quantity_location ON inventory(current_quantity, warehouse_location);
-CREATE INDEX idx_logistics_order_status ON logistics(order_id, status);
+CREATE INDEX IF NOT EXISTS idx_order_status_time ON purchase_order(status, order_time);
+CREATE INDEX IF NOT EXISTS idx_part_category_price ON part(category, purchase_price);
+CREATE INDEX IF NOT EXISTS idx_inventory_quantity_location ON inventory(current_quantity, warehouse_location);
+CREATE INDEX IF NOT EXISTS idx_logistics_order_status ON logistics(order_id, status);
+CREATE INDEX IF NOT EXISTS idx_customer_type_discount ON customer(customer_type, discount_level);
 
 -- ==================== 初始化数据 ====================
 
@@ -253,4 +277,13 @@ VALUES
 5. 金额字段使用decimal类型确保精度
 6. 状态字段使用tinyint类型，通过枚举值管理状态
 7. 关键业务字段添加唯一约束防止重复数据
+8. user表需要用反引号括起来，因为user是MySQL关键字
+
+表之间的关系：
+- user (创建人) -> purchase_order (订单)
+- supplier (供应商) -> part (零部件)
+- part (零部件) -> inventory (库存)
+- part (零部件) -> order_detail (订单明细)
+- purchase_order (订单) -> order_detail (订单明细)
+- purchase_order (订单) -> logistics (物流)
 */

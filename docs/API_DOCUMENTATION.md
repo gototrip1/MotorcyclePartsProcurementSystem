@@ -115,6 +115,7 @@
 | GET | `/api/orders/page` | 分页查询订单 |
 | PATCH | `/api/orders/update-status/{id}` | 更新订单状态 |
 | GET | `/api/orders/statistics` | 获取采购统计 |
+| GET | `/api/orders/search-details` | 搜索订单明细 |
 
 ### 供应商管理接口
 
@@ -164,7 +165,7 @@
 
 **请求**
 ```
-POST /api/suppliers
+POST /api/suppliers/create
 Content-Type: application/json
 
 {
@@ -197,7 +198,7 @@ Content-Type: application/json
 
 **请求**
 ```
-PUT /api/suppliers/{id}
+PUT /api/suppliers/update/{id}
 Content-Type: application/json
 
 {
@@ -211,21 +212,21 @@ Content-Type: application/json
 
 **请求**
 ```
-DELETE /api/suppliers/{id}
+DELETE /api/suppliers/delete/{id}
 ```
 
 ### 4. 获取单个供应商
 
 **请求**
 ```
-GET /api/suppliers/{id}
+GET /api/suppliers/get/{id}
 ```
 
 ### 5. 分页查询供应商
 
 **请求**
 ```
-GET /api/suppliers?current=1&size=10&name=博世&status=1&creditRating=A
+GET /api/suppliers/page?current=1&size=10&name=博世&status=1&creditRating=A
 ```
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -262,14 +263,14 @@ GET /api/suppliers/search?name=博世
 
 **请求**
 ```
-PATCH /api/suppliers/{id}/status?status=2
+PATCH /api/suppliers/update-status/{id}?status=2
 ```
 
 ### 8. 更新信用评级
 
 **请求**
 ```
-PATCH /api/suppliers/{id}/credit-rating?creditRating=A
+PATCH /api/suppliers/update-credit-rating/{id}?creditRating=A
 ```
 
 ---
@@ -280,7 +281,7 @@ PATCH /api/suppliers/{id}/credit-rating?creditRating=A
 
 **请求**
 ```
-POST /api/parts
+POST /api/parts/create
 Content-Type: application/json
 
 {
@@ -302,7 +303,7 @@ Content-Type: application/json
 
 **请求**
 ```
-PUT /api/parts/{id}
+PUT /api/parts/update/{id}
 Content-Type: application/json
 
 {
@@ -315,21 +316,21 @@ Content-Type: application/json
 
 **请求**
 ```
-DELETE /api/parts/{id}
+DELETE /api/parts/delete/{id}
 ```
 
 ### 4. 获取单个零部件
 
 **请求**
 ```
-GET /api/parts/{id}
+GET /api/parts/get/{id}
 ```
 
 ### 5. 分页查询零部件
 
 **请求**
 ```
-GET /api/parts?current=1&size=10&name=活塞&category=发动机类&supplierId=1
+GET /api/parts/page?current=1&size=10&name=活塞&category=发动机类&supplierId=1
 ```
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -351,7 +352,7 @@ GET /api/parts/search?name=活塞
 
 **请求**
 ```
-PATCH /api/parts/{id}/price?purchasePrice=168.00
+PATCH /api/parts/update-price/{id}?purchasePrice=168.00
 ```
 
 ### 8. 获取供应商的产品列表
@@ -369,15 +370,21 @@ GET /api/parts/supplier/{supplierId}
 
 **请求**
 ```
-POST /api/orders
+POST /api/orders/create
 Content-Type: application/json
 
 {
   "orderNumber": "PO20240101001",
-  "supplierId": 1,
   "expectedDeliveryDate": "2024-01-15",
   "remark": "紧急采购",
-  "status": 1
+  "status": 1,
+  "orderDetail": [
+    {
+      "partId": 1,
+      "quantity": 10,
+      "unitPrice": 158.00
+    }
+  ]
 }
 ```
 
@@ -385,7 +392,7 @@ Content-Type: application/json
 
 **请求**
 ```
-PUT /api/orders/{id}
+PUT /api/orders/update/{id}
 Content-Type: application/json
 
 {
@@ -397,21 +404,53 @@ Content-Type: application/json
 
 **请求**
 ```
-DELETE /api/orders/{id}
+DELETE /api/orders/delete/{id}
 ```
 
 ### 4. 获取单个订单
 
 **请求**
 ```
-GET /api/orders/{id}
+GET /api/orders/get/{id}
 ```
 
-### 5. 获取订单详情（包含明细）
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "id": 1,
+    "orderNumber": "PO20240101001",
+    "totalAmount": 1580.00,
+    "status": 1,
+    "orderTime": "2024-01-10 10:00:00",
+    "expectedDeliveryDate": "2024-01-15",
+    "orderDetail": [
+      {
+        "id": 1,
+        "orderId": 1,
+        "partId": 1,
+        "quantity": 10,
+        "unitPrice": 158.00,
+        "subtotal": 1580.00,
+        "partDetail": {
+          "id": 1,
+          "partCode": "PC2001",
+          "name": "活塞环组件",
+          ...
+        }
+      }
+    ]
+  }
+}
+```
+
+### 5. 获取订单详情
 
 **请求**
 ```
-GET /api/orders/{id}/details
+GET /api/orders/details/{id}
 ```
 
 **响应**
@@ -443,7 +482,7 @@ GET /api/orders/{id}/details
 
 **请求**
 ```
-GET /api/orders?current=1&size=10&orderNumber=PO2024&supplierId=1&status=1&startDate=2024-01-01&endDate=2024-12-31
+GET /api/orders/page?current=1&size=10&orderNumber=PO2024&status=1&startDate=2024-01-01&endDate=2024-12-31
 ```
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -451,7 +490,6 @@ GET /api/orders?current=1&size=10&orderNumber=PO2024&supplierId=1&status=1&start
 | current | Long | 否 | 当前页码 |
 | size | Long | 否 | 每页大小 |
 | orderNumber | String | 否 | 订单编号（模糊查询） |
-| supplierId | Long | 否 | 供应商ID |
 | status | Integer | 否 | 订单状态 |
 | startDate | LocalDate | 否 | 开始日期 |
 | endDate | LocalDate | 否 | 结束日期 |
@@ -469,7 +507,7 @@ GET /api/orders?current=1&size=10&orderNumber=PO2024&supplierId=1&status=1&start
 
 **请求**
 ```
-PATCH /api/orders/{id}/status?status=2
+PATCH /api/orders/update-status/{id}?status=2
 ```
 
 ### 8. 获取采购统计
@@ -493,6 +531,19 @@ GET /api/orders/statistics?startDate=2024-01-01&endDate=2024-12-31
 }
 ```
 
+### 9. 搜索订单明细
+
+**请求**
+```
+GET /api/orders/search-details?partName=活塞&startDate=2024-01-01&endDate=2024-12-31
+```
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| partName | String | 否 | 零部件名称（模糊匹配） |
+| startDate | String | 否 | 开始时间（支持 yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss） |
+| endDate | String | 否 | 结束时间（支持 yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss） |
+
 ---
 
 ## 库存管理接口
@@ -501,14 +552,36 @@ GET /api/orders/statistics?startDate=2024-01-01&endDate=2024-12-31
 
 **请求**
 ```
-GET /api/inventory/{id}
+GET /api/inventory/get/{id}
+```
+
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "id": 1,
+    "partId": 1,
+    "currentQuantity": 100,
+    "safetyStock": 20,
+    "warehouseLocation": "A区-1号库",
+    "lastInboundTime": "2024-01-10 10:00:00",
+    "partDetail": {
+      "id": 1,
+      "partCode": "PC2001",
+      "name": "活塞环组件",
+      ...
+    }
+  }
+}
 ```
 
 ### 2. 分页查询库存
 
 **请求**
 ```
-GET /api/inventory?current=1&size=10&partName=活塞&warehouseLocation=A区
+GET /api/inventory/page?current=1&size=10&partName=活塞&warehouseLocation=A区
 ```
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -571,7 +644,7 @@ GET /api/inventory/warning
 
 **请求**
 ```
-PATCH /api/inventory/{id}/safety-stock?safetyStock=30
+PATCH /api/inventory/update-safety-stock/{id}?safetyStock=30
 ```
 
 ### 7. 库存盘点
@@ -579,6 +652,20 @@ PATCH /api/inventory/{id}/safety-stock?safetyStock=30
 **请求**
 ```
 GET /api/inventory/check
+```
+
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "totalItems": 60,
+    "warningItems": 5,
+    "normalItems": 55,
+    "inventoryList": [...]
+  }
+}
 ```
 
 ---
@@ -589,7 +676,7 @@ GET /api/inventory/check
 
 **请求**
 ```
-POST /api/customers
+POST /api/customers/create
 Content-Type: application/json
 
 {
@@ -608,7 +695,7 @@ Content-Type: application/json
 
 **请求**
 ```
-PUT /api/customers/{id}
+PUT /api/customers/update/{id}
 Content-Type: application/json
 
 {
@@ -620,21 +707,21 @@ Content-Type: application/json
 
 **请求**
 ```
-DELETE /api/customers/{id}
+DELETE /api/customers/delete/{id}
 ```
 
 ### 4. 获取单个客户
 
 **请求**
 ```
-GET /api/customers/{id}
+GET /api/customers/get/{id}
 ```
 
 ### 5. 分页查询客户
 
 **请求**
 ```
-GET /api/customers?current=1&size=10&name=北京&customerType=1&discountLevel=2
+GET /api/customers/page?current=1&size=10&name=北京&customerType=1&discountLevel=2
 ```
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -671,14 +758,14 @@ GET /api/customers/search?name=北京
 
 **请求**
 ```
-PATCH /api/customers/{id}/type?customerType=2
+PATCH /api/customers/update-type/{id}?customerType=2
 ```
 
 ### 8. 更新折扣等级
 
 **请求**
 ```
-PATCH /api/customers/{id}/discount-level?discountLevel=3
+PATCH /api/customers/update-discount/{id}?discountLevel=3
 ```
 
 ---
@@ -689,7 +776,7 @@ PATCH /api/customers/{id}/discount-level?discountLevel=3
 
 **请求**
 ```
-POST /api/logistics
+POST /api/logistics/create
 Content-Type: application/json
 
 {
@@ -704,7 +791,7 @@ Content-Type: application/json
 
 **请求**
 ```
-PUT /api/logistics/{id}
+PUT /api/logistics/update/{id}
 Content-Type: application/json
 
 {
@@ -716,21 +803,21 @@ Content-Type: application/json
 
 **请求**
 ```
-DELETE /api/logistics/{id}
+DELETE /api/logistics/delete/{id}
 ```
 
 ### 4. 获取物流记录
 
 **请求**
 ```
-GET /api/logistics/{id}
+GET /api/logistics/get/{id}
 ```
 
 ### 5. 分页查询物流
 
 **请求**
 ```
-GET /api/logistics?current=1&size=10&orderId=1&trackingNumber=SF&status=2
+GET /api/logistics/page?current=1&size=10&orderId=1&trackingNumber=SF&status=2
 ```
 
 | 参数名 | 类型 | 必填 | 说明 |
@@ -760,21 +847,21 @@ GET /api/logistics/order/{orderId}
 
 **请求**
 ```
-PATCH /api/logistics/{id}/status?status=2
+PATCH /api/logistics/update-status/{id}?status=2
 ```
 
 ### 8. 更新发货信息
 
 **请求**
 ```
-PATCH /api/logistics/{id}/shipping?shipTime=2024-01-10 10:00:00&trackingNumber=SF1234567890&logisticsCompany=顺丰速运
+PATCH /api/logistics/update-shipping/{id}?shipTime=2024-01-10 10:00:00&trackingNumber=SF1234567890&logisticsCompany=顺丰速运
 ```
 
 ### 9. 更新收货信息
 
 **请求**
 ```
-PATCH /api/logistics/{id}/receiving?actualArrivalTime=2024-01-15 14:30:00&receiver=王收货
+PATCH /api/logistics/update-receiving/{id}?actualArrivalTime=2024-01-15 14:30:00&receiver=王收货
 ```
 
 ---
@@ -815,11 +902,58 @@ GET /api/statistics/dashboard
 GET /api/statistics/suppliers
 ```
 
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "total": 30,
+    "byStatus": {
+      "1": 25,
+      "2": 3,
+      "3": 2
+    },
+    "byCreditRating": {
+      "A": 10,
+      "B": 15,
+      "C": 4,
+      "D": 1
+    }
+  }
+}
+```
+
 ### 3. 获取产品分类统计
 
 **请求**
 ```
 GET /api/statistics/parts
+```
+
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "total": 60,
+    "byCategory": {
+      "发动机类": 20,
+      "电气类": 15,
+      "制动类": 10,
+      "车架类": 10,
+      "传动类": 3,
+      "外观件": 2
+    },
+    "priceRanges": {
+      "0-100": 30,
+      "100-500": 20,
+      "500-1000": 8,
+      "1000+": 2
+    }
+  }
+}
 ```
 
 ### 4. 获取库存预警统计
@@ -829,11 +963,47 @@ GET /api/statistics/parts
 GET /api/statistics/inventory
 ```
 
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "total": 60,
+    "statusDistribution": {
+      "warning": 5,
+      "normal": 55
+    },
+    "zeroStockCount": 2
+  }
+}
+```
+
 ### 5. 获取月度采购趋势
 
 **请求**
 ```
 GET /api/statistics/monthly-trend?startDate=2024-01-01&endDate=2024-12-31
+```
+
+**响应**
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "month": "2024-01",
+      "orderCount": 15,
+      "totalAmount": 258000
+    },
+    {
+      "month": "2024-02",
+      "orderCount": 12,
+      "totalAmount": 198000
+    }
+  ]
+}
 ```
 
 ---
@@ -895,6 +1065,12 @@ GET /api/statistics/monthly-trend?startDate=2024-01-01&endDate=2024-12-31
 | warehouse | 仓管员 |
 | sales | 销售员 |
 
+### 用户状态
+| 值 | 说明 |
+|----|------|
+| 1 | 正常 |
+| 2 | 禁用 |
+
 ### 零件分类
 | 值 | 说明 |
 |----|------|
@@ -914,3 +1090,4 @@ GET /api/statistics/monthly-trend?startDate=2024-01-01&endDate=2024-12-31
 3. 所有删除操作均为逻辑删除
 4. 分页查询的默认页码为1，每页大小为10
 5. 模糊查询使用LIKE %%方式
+6. 创建采购订单时，需要同时传入订单明细(orderDetail)列表
