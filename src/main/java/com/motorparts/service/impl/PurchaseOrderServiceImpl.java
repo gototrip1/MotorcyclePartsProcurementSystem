@@ -87,7 +87,10 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         }
 
         if (order.getStatus() == null) {
-            order.setStatus(1); // 待审核
+            order.setStatus(1); // 采购中（起始态）
+        }
+        if (order.getPaid() == null) {
+            order.setPaid(0); // 未付款
         }
 
         // 计算总金额
@@ -105,6 +108,11 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
             }
         }
         order.setTotalAmount(totalAmount);
+
+        // 手动设置deleted、createTime、updateTime字段
+        order.setDeleted(0);
+        order.setCreateTime(LocalDateTime.now());
+        order.setUpdateTime(LocalDateTime.now());
 
         // 保存订单
         if (!save(order)) {
@@ -125,6 +133,10 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                             .unitPrice(detailWithPart.getUnitPrice())
                             .remark(detailWithPart.getRemark())
                             .build();
+                    // 手动设置deleted、createTime、updateTime字段
+                    detail.setDeleted(0);
+                    detail.setCreateTime(LocalDateTime.now());
+                    detail.setUpdateTime(LocalDateTime.now());
                     orderDetailMapper.insert(detail);
                 }
             }
@@ -151,7 +163,10 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         }
 
         if (order.getStatus() == null) {
-            order.setStatus(1); // 待审核
+            order.setStatus(1); // 采购中（起始态）
+        }
+        if (order.getPaid() == null) {
+            order.setPaid(0); // 未付款
         }
 
         // 3. 计算总金额
@@ -172,6 +187,10 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
 
         // 4. 物理删除原订单主表数据，再重新插入
         baseMapper.physicalDeleteById(orderId);
+        // 手动设置deleted、createTime、updateTime字段
+        order.setDeleted(0);
+        order.setCreateTime(LocalDateTime.now());
+        order.setUpdateTime(LocalDateTime.now());
         baseMapper.insert(order);
 
         // 5. 插入新的订单明细数据
@@ -188,6 +207,10 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                             .unitPrice(detailWithPart.getUnitPrice())
                             .remark(detailWithPart.getRemark())
                             .build();
+                    // 手动设置deleted、createTime、updateTime字段
+                    detail.setDeleted(0);
+                    detail.setCreateTime(LocalDateTime.now());
+                    detail.setUpdateTime(LocalDateTime.now());
                     orderDetailMapper.insert(detail);
                 }
             }
@@ -205,11 +228,50 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         wrapper.set(PurchaseOrder::getStatus, status)
                .eq(PurchaseOrder::getId, id);
 
-        // 如果是已入库状态，更新实际交货日期
-        if (status == 4) {
+        // 如果是已入库状态（3），更新实际交货日期
+        if (status == 3) {
             wrapper.set(PurchaseOrder::getActualDeliveryDate, LocalDate.now());
         }
 
+        return update(wrapper);
+    }
+
+    @Override
+    public boolean updateLogistics(Long id, String logisticsCompany, String trackingNumber,
+                                   LocalDateTime shipTime, LocalDate expectedDeliveryDate) {
+        if (id == null) {
+            return false;
+        }
+        LambdaUpdateWrapper<PurchaseOrder> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(PurchaseOrder::getId, id)
+               .set(PurchaseOrder::getLogisticsCompany, logisticsCompany)
+               .set(PurchaseOrder::getTrackingNumber, trackingNumber)
+               .set(PurchaseOrder::getShipTime, shipTime)
+               .set(expectedDeliveryDate != null, PurchaseOrder::getExpectedDeliveryDate, expectedDeliveryDate);
+        return update(wrapper);
+    }
+
+    @Override
+    public boolean submitInbound(Long id) {
+        if (id == null) {
+            return false;
+        }
+        PurchaseOrder order = getById(id);
+        // 仅「采购中(1)」可提交入库审核
+        if (order == null || order.getStatus() == null || order.getStatus() != 1) {
+            return false;
+        }
+        return updateOrderStatus(id, 2); // 待入库审核
+    }
+
+    @Override
+    public boolean markPaid(Long id) {
+        if (id == null) {
+            return false;
+        }
+        LambdaUpdateWrapper<PurchaseOrder> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.set(PurchaseOrder::getPaid, 1)
+               .eq(PurchaseOrder::getId, id);
         return update(wrapper);
     }
 
@@ -232,11 +294,13 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                 .map(order -> order.getTotalAmount() != null ? order.getTotalAmount() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .longValue();
+        // 已入库（已完成）= 状态 3
         long completedOrders = orders.stream()
-                .filter(order -> order.getStatus() != null && order.getStatus() == 4)
+                .filter(order -> order.getStatus() != null && order.getStatus() == 3)
                 .count();
+        // 进行中（采购中 / 待入库审核）= 状态 1、2
         long pendingOrders = orders.stream()
-                .filter(order -> order.getStatus() != null && (order.getStatus() == 1 || order.getStatus() == 2 || order.getStatus() == 3))
+                .filter(order -> order.getStatus() != null && (order.getStatus() == 1 || order.getStatus() == 2))
                 .count();
 
         return new OrderStatistics() {

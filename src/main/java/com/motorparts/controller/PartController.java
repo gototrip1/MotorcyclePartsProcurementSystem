@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -39,6 +40,10 @@ public class PartController {
         if (partService.existsPartCode(part.getPartCode(), null)) {
             return Result.error(ResultCode.DATA_EXISTS);
         }
+        // 手动设置deleted、createTime、updateTime字段
+        part.setDeleted(0);
+        part.setCreateTime(LocalDateTime.now());
+        part.setUpdateTime(LocalDateTime.now());
         boolean success = partService.save(part);
         if (!success) {
             return Result.error();
@@ -59,6 +64,8 @@ public class PartController {
         if (partService.existsPartCode(part.getPartCode(), id)) {
             return Result.error(ResultCode.DATA_EXISTS);
         }
+        // 手动设置updateTime字段
+        part.setUpdateTime(LocalDateTime.now());
         boolean success = partService.updateById(part);
         if (!success) {
             return Result.error(ResultCode.DATA_NOT_EXISTS);

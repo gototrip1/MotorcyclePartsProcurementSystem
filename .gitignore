@@ -24,6 +24,12 @@ mvnw.cmd
 .DS_Store
 .vscode/
 *.code-workspace
+.claude/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
 
 # Eclipse
 .settings/
@@ -79,6 +85,8 @@ Desktop.ini
 
 # Documentation
 docs/_build/
+docs/项目报告*.txt
+
 
 # Package Files
 *.7z

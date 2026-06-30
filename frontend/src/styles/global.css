@@ -1,0 +1,78 @@
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #303133;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 通用页面容器 */
+.page-container {
+  padding: 16px;
+}
+
+/* 查询条件区 */
+.search-bar {
+  margin-bottom: 16px;
+}
+
+.search-bar .el-form-item {
+  margin-bottom: 12px;
+}
+
+/* 表格上方工具条 */
+.table-toolbar {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 分页右对齐 */
+.pagination-bar {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 库存预警行高亮 */
+.row-danger {
+  background-color: #fef0f0 !important;
+}
+
+.row-warning {
+  background-color: #fdf6ec !important;
+}
+
+/* 统计卡片 */
+.stat-card {
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+}
+
+.stat-card .stat-label {
+  margin-top: 8px;
+  color: #909399;
+  font-size: 14px;
+}
+
+.chart-box {
+  height: 320px;
+  width: 100%;
+}

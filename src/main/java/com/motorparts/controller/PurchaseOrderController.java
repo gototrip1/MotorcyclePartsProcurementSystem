@@ -108,6 +108,10 @@ public class PurchaseOrderController {
         orderWithDetails.setOrderTime(order.getOrderTime());
         orderWithDetails.setExpectedDeliveryDate(order.getExpectedDeliveryDate());
         orderWithDetails.setActualDeliveryDate(order.getActualDeliveryDate());
+        orderWithDetails.setPaid(order.getPaid());
+        orderWithDetails.setLogisticsCompany(order.getLogisticsCompany());
+        orderWithDetails.setTrackingNumber(order.getTrackingNumber());
+        orderWithDetails.setShipTime(order.getShipTime());
         orderWithDetails.setCreatedBy(order.getCreatedBy());
         orderWithDetails.setRemark(order.getRemark());
         orderWithDetails.setDeleted(order.getDeleted());
@@ -196,6 +200,10 @@ public class PurchaseOrderController {
             orderWithDetails.setOrderTime(order.getOrderTime());
             orderWithDetails.setExpectedDeliveryDate(order.getExpectedDeliveryDate());
             orderWithDetails.setActualDeliveryDate(order.getActualDeliveryDate());
+            orderWithDetails.setPaid(order.getPaid());
+            orderWithDetails.setLogisticsCompany(order.getLogisticsCompany());
+            orderWithDetails.setTrackingNumber(order.getTrackingNumber());
+            orderWithDetails.setShipTime(order.getShipTime());
             orderWithDetails.setCreatedBy(order.getCreatedBy());
             orderWithDetails.setRemark(order.getRemark());
             orderWithDetails.setDeleted(order.getDeleted());
@@ -259,6 +267,41 @@ public class PurchaseOrderController {
             return Result.error(ResultCode.DATA_NOT_EXISTS);
         }
         return Result.success();
+    }
+
+    /**
+     * 录入物流信息（功能 4.4/4.5）
+     */
+    @Operation(summary = "录入物流信息")
+    @PatchMapping("/update-logistics/{id}")
+    public Result<Void> updateLogistics(
+            @Parameter(description = "订单ID") @PathVariable Long id,
+            @Parameter(description = "物流公司") @RequestParam(required = false) String logisticsCompany,
+            @Parameter(description = "运单号") @RequestParam(required = false) String trackingNumber,
+            @Parameter(description = "发货时间") @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime shipTime,
+            @Parameter(description = "预计交货日期") @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate expectedDeliveryDate) {
+        boolean success = purchaseOrderService.updateLogistics(id, logisticsCompany, trackingNumber, shipTime, expectedDeliveryDate);
+        return success ? Result.success() : Result.error(ResultCode.DATA_NOT_EXISTS);
+    }
+
+    /**
+     * 提交入库申请（功能 4.6）：采购中 → 待入库审核
+     */
+    @Operation(summary = "提交入库申请")
+    @PatchMapping("/submit-inbound/{id}")
+    public Result<Void> submitInbound(@Parameter(description = "订单ID") @PathVariable Long id) {
+        boolean success = purchaseOrderService.submitInbound(id);
+        return success ? Result.success() : Result.error(ResultCode.ORDER_STATUS_ERROR);
+    }
+
+    /**
+     * 标记已付款（功能 4.7）
+     */
+    @Operation(summary = "标记已付款")
+    @PatchMapping("/mark-paid/{id}")
+    public Result<Void> markPaid(@Parameter(description = "订单ID") @PathVariable Long id) {
+        boolean success = purchaseOrderService.markPaid(id);
+        return success ? Result.success() : Result.error(ResultCode.DATA_NOT_EXISTS);
     }
 
     /**

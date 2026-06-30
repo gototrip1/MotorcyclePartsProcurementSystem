@@ -64,14 +64,17 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
 
         if (inventory == null) {
             // 创建新的库存记录
-            inventory = Inventory.builder()
-                    .partId(partId)
-                    .currentQuantity(quantity)
-                    .safetyStock(10)
-                    .warehouseLocation(StringUtils.hasText(warehouseLocation) ? warehouseLocation : "A区-1号库")
-                    .lastInboundTime(LocalDateTime.now())
-                    .build();
-            return save(inventory);
+            Inventory newInventory = new Inventory();
+            newInventory.setPartId(partId);
+            newInventory.setCurrentQuantity(quantity);
+            newInventory.setSafetyStock(10);
+            newInventory.setWarehouseLocation(StringUtils.hasText(warehouseLocation) ? warehouseLocation : "A区-1号库");
+            newInventory.setLastInboundTime(LocalDateTime.now());
+            // 手动设置 deleted、createTime、updateTime
+            newInventory.setDeleted(0);
+            newInventory.setCreateTime(LocalDateTime.now());
+            newInventory.setUpdateTime(LocalDateTime.now());
+            return save(newInventory);
         } else {
             // 更新现有库存
             LambdaUpdateWrapper<Inventory> updateWrapper = new LambdaUpdateWrapper<>();

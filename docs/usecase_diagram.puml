@@ -1,0 +1,91 @@
+@startuml 摩托车零部件采购管理系统-用例图
+left to right direction
+
+' ===== 全局样式：加大间距与字号，减少连线重叠 =====
+skinparam shadowing false
+skinparam actorStyle awesome
+skinparam nodesep 45
+skinparam ranksep 90
+skinparam packageStyle rectangle
+skinparam actorFontSize 15
+skinparam usecaseFontSize 13
+skinparam usecaseBackgroundColor #FDFDFD
+skinparam usecaseBorderColor #5A6B7B
+skinparam ArrowColor #444444
+
+' ==================== 参与者 ====================
+actor "系统用户" as base
+actor "采购员"   as buyer
+actor "领用人员" as picker
+actor "管理员"   as admin
+
+' 用隐藏链接把参与者锁成纵向一列：系统用户固定在最上、最左
+base   -[hidden]down- buyer
+buyer  -[hidden]down- picker
+picker -[hidden]down- admin
+
+' ==================== 系统边界 ====================
+rectangle "摩托车零部件采购管理系统" {
+
+  ' ---- 公共用例（登录组，放最上）----
+  usecase "登录"           as UC_login
+  usecase "验证密码"        as UC_verifypwd
+  usecase "显示登录错误"     as UC_loginerr
+
+  ' ---- 采购员用例 ----
+  usecase "管理供应商资料"    as UC_supplier
+  usecase "管理零部件资料"    as UC_part
+  usecase "创建采购单"       as UC_po
+  usecase "计算订单总价"      as UC_calc
+  usecase "录入物流/标记发货"  as UC_logi
+  usecase "提交入库申请"      as UC_inreq
+  usecase "标记已付款"       as UC_paid
+
+  ' ---- 领用人员用例 ----
+  usecase "创建领用单"       as UC_so
+  usecase "提交出库申请"      as UC_outreq
+
+  ' ---- 管理员用例 ----
+  usecase "审核供应商/零件"   as UC_audit
+  usecase "审核采购入库(库存+)" as UC_inbound
+  usecase "审核领用出库(库存-)" as UC_outbound
+  usecase "验证库存充足"      as UC_checkstock
+  usecase "库存预警提醒"      as UC_warn
+  usecase "管理用户账号"      as UC_user
+  usecase "查看统计报表"      as UC_report
+}
+
+' ==================== 泛化（generalization）====================
+buyer  --|> base
+picker --|> base
+admin  --|> base
+
+' ==================== 关联（association）====================
+base   -- UC_login
+
+buyer  -- UC_supplier
+buyer  -- UC_part
+buyer  -- UC_po
+buyer  -- UC_logi
+buyer  -- UC_inreq
+buyer  -- UC_paid
+
+picker -- UC_so
+picker -- UC_outreq
+
+admin  -- UC_audit
+admin  -- UC_inbound
+admin  -- UC_outbound
+admin  -- UC_user
+admin  -- UC_report
+
+' ==================== 包含（include）====================
+UC_login    ..> UC_verifypwd  : <<include>>
+UC_po       ..> UC_calc       : <<include>>
+UC_outbound ..> UC_checkstock : <<include>>
+
+' ==================== 扩展（extend）====================
+UC_loginerr ..> UC_login     : <<extend>>
+UC_warn     ..> UC_outbound  : <<extend>>
+
+@enduml

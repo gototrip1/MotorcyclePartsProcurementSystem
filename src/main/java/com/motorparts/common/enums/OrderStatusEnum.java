@@ -6,29 +6,24 @@ package com.motorparts.common.enums;
 public enum OrderStatusEnum {
 
     /**
-     * 待审核
+     * 采购中（采购员建单起始态，自行处理物流/发货/等货，无需审核）
      */
-    PENDING_REVIEW(1, "待审核"),
+    PURCHASING(1, "采购中"),
 
     /**
-     * 已审核
+     * 待入库审核（采购员货到提交，球交给管理员）
      */
-    REVIEWED(2, "已审核"),
+    PENDING_INBOUND(2, "待入库审核"),
 
     /**
-     * 采购中
+     * 已入库（管理员审核通过，库存 +）
      */
-    PURCHASING(3, "采购中"),
-
-    /**
-     * 已入库
-     */
-    STORED(4, "已入库"),
+    STORED(3, "已入库"),
 
     /**
      * 已取消
      */
-    CANCELLED(5, "已取消");
+    CANCELLED(4, "已取消");
 
     private final Integer code;
     private final String description;

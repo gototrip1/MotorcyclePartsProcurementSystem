@@ -25,15 +25,13 @@ public class StatisticsController {
     private final PurchaseOrderService purchaseOrderService;
     private final SupplierMapper supplierMapper;
     private final PartMapper partMapper;
-    private final CustomerMapper customerMapper;
     private final UserMapper userMapper;
     private final InventoryMapper inventoryMapper;
 
-    public StatisticsController(PurchaseOrderService purchaseOrderService, SupplierMapper supplierMapper, PartMapper partMapper, CustomerMapper customerMapper, UserMapper userMapper, InventoryMapper inventoryMapper) {
+    public StatisticsController(PurchaseOrderService purchaseOrderService, SupplierMapper supplierMapper, PartMapper partMapper, UserMapper userMapper, InventoryMapper inventoryMapper) {
         this.purchaseOrderService = purchaseOrderService;
         this.supplierMapper = supplierMapper;
         this.partMapper = partMapper;
-        this.customerMapper = customerMapper;
         this.userMapper = userMapper;
         this.inventoryMapper = inventoryMapper;
     }
@@ -53,10 +51,6 @@ public class StatisticsController {
         // 产品总数
         long partCount = partMapper.selectCount(null);
         dashboard.put("partCount", partCount);
-
-        // 客户总数
-        long customerCount = customerMapper.selectCount(null);
-        dashboard.put("customerCount", customerCount);
 
         // 用户总数
         long userCount = userMapper.selectCount(null);

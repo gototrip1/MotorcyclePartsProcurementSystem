@@ -40,13 +40,13 @@ public class User extends BaseEntity {
 
     /**
      * 角色
-     * admin-管理员, purchase-采购员, warehouse-仓管员, sales-销售员
+     * admin-管理员, purchase-采购专员, requisition-领用人员
      */
     private String role;
 
     /**
      * 部门
-     * 采购部、仓储部、销售部、财务部
+     * 管理部、采购部、生产车间
      */
     private String department;
 

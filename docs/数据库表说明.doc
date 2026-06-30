@@ -1,0 +1,157 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>摩托车零部件采购管理系统 - 数据库表说明</title>
+<style>
+  body { font-family: "宋体", "SimSun", serif; font-size: 11pt; line-height: 1.5; }
+  h1 { font-family: "黑体","SimHei"; font-size: 18pt; text-align: center; }
+  h2 { font-family: "黑体","SimHei"; font-size: 14pt; margin-top: 20pt; border-left: 5px solid #1F3B5C; padding-left: 8px; }
+  p.desc { margin: 4pt 0 8pt 0; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 10pt; }
+  th, td { border: 1px solid #000000; padding: 5px 8px; vertical-align: top; font-size: 10.5pt; }
+  th { background: #1F3B5C; color: #FFFFFF; text-align: left; }
+  td.field { width: 28%; font-family: "Consolas","Courier New",monospace; }
+  .note { background: #F2F6FC; border: 1px solid #C0D0E8; padding: 6px 10px; margin: 6pt 0 14pt 0; }
+  code { font-family: "Consolas","Courier New",monospace; }
+</style>
+</head>
+<body>
+
+<h1>摩托车零部件采购管理系统<br>数据库表说明</h1>
+<p style="text-align:center;">数据库名：<code>motorparts</code>　|　字符集：<code>utf8mb4</code>　|　引擎：InnoDB</p>
+<p class="desc">本系统共 <b>8 张表</b> 与 <b>3 个视图</b>。每张表均包含逻辑删除字段 <code>deleted</code>（0-未删除 / 1-已删除）及 <code>create_time</code>（创建时间）、<code>update_time</code>（更新时间），下文不再重复列出。</p>
+
+<h2>1. user —— 用户/员工表</h2>
+<p class="desc">存放系统所有登录账号，按角色区分权限，是整个权限模型的根。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">id</td><td>主键，自增，用户ID</td></tr>
+<tr><td class="field">username</td><td>用户名，唯一（uk_username）</td></tr>
+<tr><td class="field">password</td><td>加密后的密码（如 BCrypt 串）</td></tr>
+<tr><td class="field">real_name</td><td>真实姓名</td></tr>
+<tr><td class="field">role</td><td>角色：admin 系统管理员 / purchase 采购专员 / requisition 领用人员，默认 purchase</td></tr>
+<tr><td class="field">department</td><td>部门（管理部 / 采购部 / 生产车间）</td></tr>
+<tr><td class="field">phone / email</td><td>联系电话、邮箱</td></tr>
+<tr><td class="field">status</td><td>状态：1-正常，2-禁用</td></tr>
+</table>
+<p class="note">权限模型根表：采购专员建采购单、领用人员建领用单、管理员审核。索引：idx_role、idx_status。</p>
+
+<h2>2. supplier —— 供应商表</h2>
+<p class="desc">零件的来源单位，由采购专员新建、管理员审核。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">supplier_code</td><td>供应商编码，唯一</td></tr>
+<tr><td class="field">name</td><td>供应商名称</td></tr>
+<tr><td class="field">contact_person / phone / email / address</td><td>联系人、联系电话、邮箱、地址</td></tr>
+<tr><td class="field">credit_rating</td><td>信用评级：A 优秀 / B 良好 / C 一般 / D 较差，默认 B</td></tr>
+<tr><td class="field">status</td><td>合作状态：1-合作中，2-已终止，3-审核中（采购专员新建待审核态）</td></tr>
+</table>
+<p class="note">与 part 是 1→N 关系（一个供应商供应多种零件）。</p>
+
+<h2>3. part —— 产品/零部件表</h2>
+<p class="desc">零件主数据，采购单价由管理员锁定。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">part_code</td><td>零件编码，唯一</td></tr>
+<tr><td class="field">name / model / specification / unit</td><td>名称、型号、规格、单位（个/套/件/台）</td></tr>
+<tr><td class="field">purchase_price</td><td>采购单价（管理员锁定）</td></tr>
+<tr><td class="field">suggested_retail_price</td><td>建议零售价</td></tr>
+<tr><td class="field">stock_warning_value</td><td>库存预警值，默认 10</td></tr>
+<tr><td class="field">supplier_id</td><td>供应商外键 → supplier(id)，ON DELETE SET NULL（供应商删除后零件仍保留）</td></tr>
+<tr><td class="field">category</td><td>分类（发动机类/车架类/电气类/制动类/传动类/外观件）</td></tr>
+<tr><td class="field">description</td><td>零件描述</td></tr>
+</table>
+<p class="note">与 inventory 是 1→1 关系（每个零件对应一条库存记录）。</p>
+
+<h2>4. purchase_order —— 采购订单表（含物流信息）</h2>
+<p class="desc">采购入库的主单，物流字段已并入此表，不再单独建 logistics 表。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">order_number</td><td>订单编号，唯一</td></tr>
+<tr><td class="field">total_amount</td><td>订单总金额（与明细小计汇总一致）</td></tr>
+<tr><td class="field">status</td><td>采购单状态：1-采购中，2-待入库审核，3-已入库，4-已取消</td></tr>
+<tr><td class="field">paid</td><td>付款标志：0-未付款，1-已付款（独立于 status，不污染状态机）</td></tr>
+<tr><td class="field">order_time</td><td>下单时间</td></tr>
+<tr><td class="field">expected_delivery_date</td><td>预计交货日期（下单时与供应商约定）</td></tr>
+<tr><td class="field">actual_delivery_date</td><td>实际到货日期（货到时人工确认，系统不计算）</td></tr>
+<tr><td class="field">logistics_company / tracking_number / ship_time</td><td>并入的物流字段：物流公司、运单号、发货时间</td></tr>
+<tr><td class="field">created_by</td><td>创建人（采购专员）外键 → user(id)，ON DELETE SET NULL</td></tr>
+<tr><td class="field">remark</td><td>备注</td></tr>
+</table>
+<p class="note">关键规则：只有当 status 被管理员审核改为 3-已入库 时，才触发库存增加。</p>
+
+<h2>5. order_detail —— 订单明细表</h2>
+<p class="desc">一张采购单下的逐行零件明细。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">order_id</td><td>采购单外键 → purchase_order(id)，ON DELETE CASCADE（删单连带删明细）</td></tr>
+<tr><td class="field">part_id</td><td>零件外键 → part(id)，ON DELETE RESTRICT（零件被引用则不可删）</td></tr>
+<tr><td class="field">quantity</td><td>采购数量</td></tr>
+<tr><td class="field">unit_price</td><td>采购单价</td></tr>
+<tr><td class="field">subtotal</td><td>小计 = quantity × unit_price，数据库自动生成列（STORED），无需插入</td></tr>
+<tr><td class="field">remark</td><td>备注</td></tr>
+</table>
+<p class="note">uk_order_part(order_id, part_id) 约束：同一张单里同一零件不能重复出现。</p>
+
+<h2>6. inventory —— 库存表</h2>
+<p class="desc">每个零件一条库存记录，是整个系统的“账”。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">part_id</td><td>零件外键 → part(id)，唯一（uk_part_id，保证 1→1）</td></tr>
+<tr><td class="field">current_quantity</td><td>当前库存数量，只能由审核通过的出入库自动变更，不允许手工改</td></tr>
+<tr><td class="field">safety_stock</td><td>安全库存量，默认 10</td></tr>
+<tr><td class="field">last_inbound_time / last_outbound_time</td><td>最近入库时间 / 最近出库时间</td></tr>
+<tr><td class="field">warehouse_location</td><td>仓库位置，默认“A区-1号库”</td></tr>
+</table>
+<p class="note">当 current_quantity ≤ 预警值/安全库存 时触发库存预警（见库存预警视图）。</p>
+
+<h2>7. stock_out_order —— 领用单（出库单）</h2>
+<p class="desc">领用人员发起、管理员审核出库的主单（内部领料，无对外销售）。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">stock_out_number</td><td>领用单号，唯一</td></tr>
+<tr><td class="field">user_id</td><td>领用人外键 → user(id)，ON DELETE RESTRICT</td></tr>
+<tr><td class="field">department</td><td>领用部门</td></tr>
+<tr><td class="field">purpose</td><td>用途：生产 / 维修 / 报废 / 其他，默认 生产</td></tr>
+<tr><td class="field">status</td><td>领用单状态：1-待审核，2-已出库，3-已取消</td></tr>
+<tr><td class="field">stock_out_time</td><td>领用时间</td></tr>
+<tr><td class="field">remark</td><td>备注</td></tr>
+</table>
+<p class="note">关键规则：只有 status 被管理员审核改为 2-已出库 时，才触发库存减少。</p>
+
+<h2>8. stock_out_detail —— 领用明细表</h2>
+<p class="desc">一张领用单下的逐行零件明细。</p>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td class="field">stock_out_id</td><td>领用单外键 → stock_out_order(id)，ON DELETE CASCADE</td></tr>
+<tr><td class="field">part_id</td><td>零件外键 → part(id)，ON DELETE RESTRICT</td></tr>
+<tr><td class="field">quantity</td><td>领用数量</td></tr>
+<tr><td class="field">unit_cost</td><td>成本单价（出库估值用，可空）</td></tr>
+<tr><td class="field">remark</td><td>备注</td></tr>
+</table>
+<p class="note">uk_stockout_part(stock_out_id, part_id)：同一张领用单里同一零件不能重复。</p>
+
+<h2>附：三个视图（统计/查询用，非实体表）</h2>
+<table>
+<tr><th>视图</th><th>作用</th></tr>
+<tr><td class="field">inventory_warning_view</td><td>库存预警视图：联 inventory + part，按 current_quantity 与预警值/安全库存比较，输出 严重不足 / 不足 / 充足 三级状态</td></tr>
+<tr><td class="field">order_statistics_view</td><td>采购统计视图：按下单日期 GROUP BY，统计每日订单数、总金额、平均金额</td></tr>
+<tr><td class="field">order_detail_full_view</td><td>订单明细全信息视图：联 order_detail + purchase_order + part + supplier，拼成宽表，便于报表/查询</td></tr>
+</table>
+
+<h2>附：整体表关系一览</h2>
+<table>
+<tr><th>关系</th><th>说明</th></tr>
+<tr><td class="field">user(采购专员) 1→N purchase_order</td><td>采购专员创建多张采购单</td></tr>
+<tr><td class="field">user(领用人) 1→N stock_out_order</td><td>领用人创建多张领用单</td></tr>
+<tr><td class="field">supplier 1→N part</td><td>一个供应商供应多种零件</td></tr>
+<tr><td class="field">part 1→1 inventory</td><td>每个零件一条库存记录</td></tr>
+<tr><td class="field">purchase_order 1→N order_detail N→1 part</td><td>采购单 — 明细 — 零件</td></tr>
+<tr><td class="field">stock_out_order 1→N stock_out_detail N→1 part</td><td>领用单 — 明细 — 零件</td></tr>
+</table>
+<p class="note"><b>两条核心铁律：</b><br>
+1. 库存 inventory.current_quantity 只能由【管理员审核通过】的入库（采购单→已入库）/出库（领用单→已出库）自动变更，任何角色都不能手工改数字。<br>
+2. 付款状态用独立的 paid 字段，不混入采购单 status 状态机。</p>
+
+</body>
+</html>

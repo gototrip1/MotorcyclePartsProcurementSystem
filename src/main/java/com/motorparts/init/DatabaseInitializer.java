@@ -150,20 +150,6 @@ public class DatabaseInitializer implements ApplicationRunner {
             "A区-1号库", "A区-2号库", "B区-1号库", "B区-2号库", "C区-1号库"
     };
 
-    // 客户数据
-    private static final String[] CUSTOMER_NAMES = {
-            "北京摩托车配件城", "上海汽配批发市场", "广州摩托车用品店", "深圳骑士配件商行",
-            "成都摩托之家", "重庆摩托车批发中心", "杭州骑士装备店", "南京摩托车维修中心",
-            "武汉汽配超市", "西安摩托车配件商城", "天津摩托车市场", "苏州骑士配件店",
-            "青岛摩托车批发", "大连摩托配件中心", "宁波摩托车城", "厦门骑士用品商行",
-            "哈尔滨摩托配件", "长春摩托车批发", "沈阳汽配中心", "呼和浩特摩托城",
-            "郑州摩托车配件", "长沙骑士配件", "昆明摩托车用品", "南宁摩托批发",
-            "海口摩托车城", "贵阳骑士配件", "拉萨摩托车中心", "兰州摩托用品",
-            "西宁摩托车批发", "银川骑士配件", "乌鲁木齐摩托城", "太原摩托车配件",
-            "石家庄骑士用品", "南昌摩托车中心", "南宁摩托批发", "济南摩托车城",
-            "合肥骑士配件", "福州摩托车用品", "温州摩托车批发", "无锡摩托配件"
-    };
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (!initEnabled) {
@@ -197,12 +183,12 @@ public class DatabaseInitializer implements ApplicationRunner {
     private void createDatabase() {
         try {
             // 创建数据库
-            jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS motorparts_db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci");
-            log.info("数据库 motorparts_db 创建成功或已存在");
-            
+            jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS motorparts CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci");
+            log.info("数据库 motorparts 创建成功或已存在");
+
             // 切换到新创建的数据库
-            jdbcTemplate.execute("USE motorparts_db");
-            log.info("已切换到数据库 motorparts_db");
+            jdbcTemplate.execute("USE motorparts");
+            log.info("已切换到数据库 motorparts");
         } catch (Exception e) {
             log.warn("创建数据库时出错（可能已存在）: {}", e.getMessage());
         }
@@ -227,7 +213,9 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'," +
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
-                "  UNIQUE KEY `uk_username` (`username`)" +
+                "  UNIQUE KEY `uk_username` (`username`)," +
+                "  KEY `idx_role` (`role`)," +
+                "  KEY `idx_status` (`status`)" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户/员工表'");
 
         // 供应商表
@@ -245,7 +233,9 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'," +
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
-                "  UNIQUE KEY `uk_supplier_code` (`supplier_code`)" +
+                "  UNIQUE KEY `uk_supplier_code` (`supplier_code`)," +
+                "  KEY `idx_status` (`status`)," +
+                "  KEY `idx_credit_rating` (`credit_rating`)" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='供应商表'");
 
         // 产品表
@@ -267,7 +257,9 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
                 "  UNIQUE KEY `uk_part_code` (`part_code`)," +
-                "  KEY `idx_supplier_id` (`supplier_id`)" +
+                "  KEY `idx_supplier_id` (`supplier_id`)," +
+                "  KEY `idx_category` (`category`)," +
+                "  CONSTRAINT `fk_part_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`) ON DELETE SET NULL ON UPDATE CASCADE" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='产品/零部件表'");
 
         // 采购订单表
@@ -275,10 +267,14 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '订单ID'," +
                 "  `order_number` varchar(50) NOT NULL COMMENT '订单编号'," +
                 "  `total_amount` decimal(12,2) DEFAULT '0.00' COMMENT '订单总金额'," +
-                "  `status` tinyint DEFAULT '1' COMMENT '订单状态'," +
+                "  `status` tinyint DEFAULT '1' COMMENT '订单状态(1-采购中,2-待入库审核,3-已入库,4-已取消)'," +
+                "  `paid` tinyint DEFAULT '0' COMMENT '付款状态(0-未付款,1-已付款)'," +
                 "  `order_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '下单时间'," +
                 "  `expected_delivery_date` date DEFAULT NULL COMMENT '预计交货日期'," +
                 "  `actual_delivery_date` date DEFAULT NULL COMMENT '实际交货日期'," +
+                "  `logistics_company` varchar(100) DEFAULT NULL COMMENT '物流公司'," +
+                "  `tracking_number` varchar(100) DEFAULT NULL COMMENT '运单号'," +
+                "  `ship_time` datetime DEFAULT NULL COMMENT '发货时间'," +
                 "  `created_by` bigint DEFAULT NULL COMMENT '创建人ID'," +
                 "  `remark` varchar(500) DEFAULT NULL COMMENT '备注'," +
                 "  `deleted` tinyint DEFAULT '0' COMMENT '删除标志'," +
@@ -286,7 +282,11 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
                 "  UNIQUE KEY `uk_order_number` (`order_number`)," +
-                "  KEY `idx_order_time` (`order_time`)" +
+                "  KEY `idx_status` (`status`)," +
+                "  KEY `idx_order_time` (`order_time`)," +
+                "  KEY `idx_created_by` (`created_by`)," +
+                "  KEY `idx_tracking_number` (`tracking_number`)," +
+                "  CONSTRAINT `fk_order_created_by` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='采购订单表'");
 
         // 订单明细表
@@ -303,7 +303,10 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
                 "  KEY `idx_order_id` (`order_id`)," +
-                "  KEY `idx_part_id` (`part_id`)" +
+                "  KEY `idx_part_id` (`part_id`)," +
+                "  UNIQUE KEY `uk_order_part` (`order_id`, `part_id`)," +
+                "  CONSTRAINT `fk_detail_order` FOREIGN KEY (`order_id`) REFERENCES `purchase_order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "  CONSTRAINT `fk_detail_part` FOREIGN KEY (`part_id`) REFERENCES `part` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单明细表'");
 
         // 库存表
@@ -319,46 +322,50 @@ public class DatabaseInitializer implements ApplicationRunner {
                 "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'," +
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
-                "  UNIQUE KEY `uk_part_id` (`part_id`)" +
+                "  UNIQUE KEY `uk_part_id` (`part_id`)," +
+                "  KEY `idx_current_quantity` (`current_quantity`)," +
+                "  CONSTRAINT `fk_inventory_part` FOREIGN KEY (`part_id`) REFERENCES `part` (`id`) ON DELETE CASCADE ON UPDATE CASCADE" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存表'");
 
-        // 客户表
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `customer` (" +
-                "  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '客户ID'," +
-                "  `customer_code` varchar(50) NOT NULL COMMENT '客户编码'," +
-                "  `name` varchar(100) NOT NULL COMMENT '客户名称'," +
-                "  `contact_person` varchar(50) DEFAULT NULL COMMENT '联系人'," +
-                "  `phone` varchar(20) DEFAULT NULL COMMENT '联系电话'," +
-                "  `email` varchar(100) DEFAULT NULL COMMENT '邮箱'," +
-                "  `address` varchar(200) DEFAULT NULL COMMENT '地址'," +
-                "  `customer_type` tinyint DEFAULT '1' COMMENT '客户类型'," +
-                "  `discount_level` tinyint DEFAULT '1' COMMENT '折扣等级'," +
-                "  `registered_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间'," +
-                "  `deleted` tinyint DEFAULT '0' COMMENT '删除标志'," +
-                "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'," +
-                "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
-                "  PRIMARY KEY (`id`)," +
-                "  UNIQUE KEY `uk_customer_code` (`customer_code`)" +
-                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='客户表'");
-
-        // 物流表
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `logistics` (" +
-                "  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '物流ID'," +
-                "  `order_id` bigint NOT NULL COMMENT '订单ID'," +
-                "  `logistics_company` varchar(100) DEFAULT NULL COMMENT '物流公司'," +
-                "  `tracking_number` varchar(100) DEFAULT NULL COMMENT '运单号'," +
-                "  `ship_time` datetime DEFAULT NULL COMMENT '发货时间'," +
-                "  `estimated_arrival_time` datetime DEFAULT NULL COMMENT '预计到达时间'," +
-                "  `actual_arrival_time` datetime DEFAULT NULL COMMENT '实际到达时间'," +
-                "  `status` tinyint DEFAULT '1' COMMENT '物流状态'," +
-                "  `receiver` varchar(100) DEFAULT NULL COMMENT '收货人'," +
+        // 领用单表（领用人员发起，管理员审核出库）
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `stock_out_order` (" +
+                "  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '领用单ID'," +
+                "  `stock_out_number` varchar(50) NOT NULL COMMENT '领用单号'," +
+                "  `user_id` bigint NOT NULL COMMENT '领用人ID'," +
+                "  `department` varchar(50) DEFAULT NULL COMMENT '领用部门'," +
+                "  `purpose` varchar(50) DEFAULT '生产' COMMENT '用途(生产/维修/报废/其他)'," +
+                "  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态(1-待审核, 2-已出库, 3-已取消)'," +
+                "  `stock_out_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '领用时间'," +
                 "  `remark` varchar(500) DEFAULT NULL COMMENT '备注'," +
                 "  `deleted` tinyint DEFAULT '0' COMMENT '删除标志'," +
                 "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'," +
                 "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
                 "  PRIMARY KEY (`id`)," +
-                "  KEY `idx_order_id` (`order_id`)" +
-                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='物流信息表'");
+                "  UNIQUE KEY `uk_stock_out_number` (`stock_out_number`)," +
+                "  KEY `idx_user_id` (`user_id`)," +
+                "  KEY `idx_status` (`status`)," +
+                "  KEY `idx_stock_out_time` (`stock_out_time`)," +
+                "  CONSTRAINT `fk_stockout_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='领用单(出库单)'");
+
+        // 领用明细表
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `stock_out_detail` (" +
+                "  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '明细ID'," +
+                "  `stock_out_id` bigint NOT NULL COMMENT '领用单ID'," +
+                "  `part_id` bigint NOT NULL COMMENT '零部件ID'," +
+                "  `quantity` int NOT NULL DEFAULT '1' COMMENT '领用数量'," +
+                "  `unit_cost` decimal(10,2) DEFAULT NULL COMMENT '成本单价(出库估值用，可空)'," +
+                "  `remark` varchar(200) DEFAULT NULL COMMENT '备注'," +
+                "  `deleted` tinyint DEFAULT '0' COMMENT '删除标志'," +
+                "  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'," +
+                "  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'," +
+                "  PRIMARY KEY (`id`)," +
+                "  KEY `idx_stock_out_id` (`stock_out_id`)," +
+                "  KEY `idx_part_id` (`part_id`)," +
+                "  UNIQUE KEY `uk_stockout_part` (`stock_out_id`, `part_id`)," +
+                "  CONSTRAINT `fk_sod_order` FOREIGN KEY (`stock_out_id`) REFERENCES `stock_out_order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE," +
+                "  CONSTRAINT `fk_sod_part` FOREIGN KEY (`part_id`) REFERENCES `part` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='领用明细表'");
 
         log.info("所有数据表创建成功");
     }
@@ -389,21 +396,17 @@ public class DatabaseInitializer implements ApplicationRunner {
         insertParts();
         log.info("产品数据插入完成");
 
-        // 插入客户数据
-        insertCustomers();
-        log.info("客户数据插入完成");
-
         // 插入库存数据
         insertInventories();
         log.info("库存数据插入完成");
 
-        // 插入采购订单和明细
+        // 插入采购订单和明细（含物流信息）
         insertPurchaseOrders();
         log.info("采购订单数据插入完成");
 
-        // 插入物流数据
-        insertLogistics();
-        log.info("物流数据插入完成");
+        // 插入领用单和明细
+        insertStockOuts();
+        log.info("领用单数据插入完成");
 
         log.info("所有模拟数据插入完成");
     }
@@ -412,8 +415,9 @@ public class DatabaseInitializer implements ApplicationRunner {
      * 插入用户数据
      */
     private void insertUsers() {
-        String[] roles = {"admin", "purchase", "warehouse", "sales"};
-        String[] departments = {"财务部", "采购部", "仓储部", "销售部"};
+        // 仅 3 种角色：admin-管理员 / purchase-采购专员 / requisition-领用人员
+        String[] roles = {"admin", "purchase", "requisition"};
+        String[] departments = {"管理部", "采购部", "生产车间"};
         String[] names = {"系统管理员", "张三", "李四", "王五", "赵六", "钱七", "孙八", "周九"};
         String[] emails = {"admin@motorparts.com", "zhangsan@motorparts.com", "lisi@motorparts.com",
                 "wangwu@motorparts.com", "zhaoliu@motorparts.com", "qianqi@motorparts.com",
@@ -498,31 +502,6 @@ public class DatabaseInitializer implements ApplicationRunner {
     }
 
     /**
-     * 插入客户数据
-     */
-    private void insertCustomers() {
-        String[] types = {"1", "2", "3"}; // 经销商、零售店、个人用户
-        String[] discounts = {"1", "2", "3", "4"}; // 无折扣、银牌、金牌、钻石
-        String[] cities = {"北京", "上海", "广州", "深圳", "成都", "重庆", "杭州", "南京", "武汉", "西安"};
-
-        for (int i = 0; i < CUSTOMER_NAMES.length; i++) {
-            String code = "CUS" + String.format("%05d", i + 1);
-            String name = CUSTOMER_NAMES[i];
-            String contact = "张" + (char) ('A' + random.nextInt(26));
-            String phone = "139" + String.format("%08d", random.nextInt(100000000));
-            String email = "customer" + (i + 1) + "@motorparts.com";
-            String address = cities[random.nextInt(cities.length)] + "市某区某街道" + (i + 1) + "号";
-            String type = types[random.nextInt(types.length)];
-            String discount = discounts[random.nextInt(discounts.length)];
-
-            jdbcTemplate.update(
-                    "INSERT INTO customer (customer_code, name, contact_person, phone, email, address, customer_type, discount_level, registered_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    code, name, contact, phone, email, address, type, discount, getRandomDateTime2024()
-            );
-        }
-    }
-
-    /**
      * 插入库存数据
      */
     private void insertInventories() {
@@ -571,14 +550,27 @@ public class DatabaseInitializer implements ApplicationRunner {
             String orderNumber = "PO" + LocalDate.now().getYear() + String.format("%06d", i + 1);
             Long createdBy = userIds.get(random.nextInt(userIds.size()));
 
-            // 订单状态：待审核、已审核、采购中、已入库、已取消
-            int[] orderStatuses = {1, 2, 3, 4, 5};
-            int[] statusWeights = {10, 20, 30, 35, 5}; // 权重
+            // 订单状态：1-采购中、2-待入库审核、3-已入库、4-已取消
+            int[] orderStatuses = {1, 2, 3, 4};
+            int[] statusWeights = {30, 25, 40, 5}; // 权重
             int status = getWeightedRandom(orderStatuses, statusWeights);
 
             LocalDateTime orderTime = getRandomDateTime2024();
             LocalDate expectedDate = orderTime.toLocalDate().plusDays(7 + random.nextInt(14));
-            LocalDate actualDate = status == 4 ? expectedDate.plusDays(random.nextInt(7) - 3) : null;
+            // 已入库(3)才有实际到货日期
+            LocalDate actualDate = status == 3 ? expectedDate.plusDays(random.nextInt(7) - 3) : null;
+            // 已入库(3)默认已付款，其余未付款
+            int paid = status == 3 ? 1 : 0;
+
+            // 物流信息：待入库审核(2)或已入库(3)的单据已发货，物流字段并入采购单
+            String logisticsCompany = null;
+            String trackingNumber = null;
+            LocalDateTime shipTime = null;
+            if (status == 2 || status == 3) {
+                logisticsCompany = LOGISTICS_COMPANIES[random.nextInt(LOGISTICS_COMPANIES.length)];
+                trackingNumber = (random.nextBoolean() ? "SF" : "YT") + random.nextInt(100000000);
+                shipTime = orderTime.plusDays(1 + random.nextInt(3));
+            }
 
             // 生成订单金额
             int itemCount = 2 + random.nextInt(6);
@@ -586,8 +578,10 @@ public class DatabaseInitializer implements ApplicationRunner {
 
             // 先插入订单，获取ID
             jdbcTemplate.update(
-                    "INSERT INTO purchase_order (order_number, total_amount, status, order_time, expected_delivery_date, actual_delivery_date, created_by, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    orderNumber, 0, status, orderTime, expectedDate, actualDate, createdBy, orderTime
+                    "INSERT INTO purchase_order (order_number, total_amount, status, paid, order_time, expected_delivery_date, actual_delivery_date, logistics_company, tracking_number, ship_time, created_by, create_time) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    orderNumber, 0, status, paid, orderTime, expectedDate, actualDate,
+                    logisticsCompany, trackingNumber, shipTime, createdBy, orderTime
             );
 
             // 获取插入的订单ID
@@ -621,37 +615,57 @@ public class DatabaseInitializer implements ApplicationRunner {
     }
 
     /**
-     * 插入物流数据
+     * 插入领用单（出库单）与明细数据
      */
-    private void insertLogistics() {
-        // 获取已发货或已签收的订单ID
-        List<Long> orderIds = jdbcTemplate.queryForList(
-                "SELECT id FROM purchase_order WHERE status IN (3, 4) AND deleted = 0", Long.class);
+    private void insertStockOuts() {
+        // 领用人只能是 requisition 角色；若没有则退化为全部用户
+        List<Long> userIds = jdbcTemplate.queryForList(
+                "SELECT id FROM user WHERE role = 'requisition'", Long.class);
+        if (userIds.isEmpty()) {
+            userIds = jdbcTemplate.queryForList("SELECT id FROM user", Long.class);
+        }
+        List<Map<String, Object>> allParts = jdbcTemplate.queryForList("SELECT id, purchase_price FROM part");
+        if (userIds.isEmpty() || allParts.isEmpty()) {
+            return;
+        }
 
-        for (Long orderId : orderIds) {
-            String logisticsCompany = LOGISTICS_COMPANIES[random.nextInt(LOGISTICS_COMPANIES.length)];
-            String trackingNumber = random.nextBoolean() ?
-                    "SF" + random.nextInt(100000000) :
-                    "YT" + random.nextInt(100000000);
+        String[] departments = {"生产车间", "维修部", "总装线", "质检部"};
+        String[] purposes = {"生产", "维修", "报废", "其他"};
+        // 状态：1-待审核、2-已出库、3-已取消
+        int[] statuses = {1, 2, 3};
+        int[] statusWeights = {40, 50, 10};
 
-            // 获取订单时间
-            LocalDateTime orderTime = jdbcTemplate.queryForObject(
-                    "SELECT order_time FROM purchase_order WHERE id = ?", LocalDateTime.class, orderId);
-
-            LocalDateTime shipTime = orderTime.plusDays(1 + random.nextInt(3));
-            LocalDateTime estimatedArrival = shipTime.plusDays(3 + random.nextInt(5));
-
-            // 物流状态
-            int status = random.nextBoolean() ? 3 : 2; // 大部分已签收
-            LocalDateTime actualArrival = status == 3 ?
-                    estimatedArrival.plusDays(random.nextInt(3) - 1) : null;
-
-            String receiver = "收货员" + (char) ('A' + random.nextInt(26));
+        for (int i = 0; i < 30; i++) {
+            String stockOutNumber = "SO" + LocalDate.now().getYear() + String.format("%06d", i + 1);
+            Long userId = userIds.get(random.nextInt(userIds.size()));
+            String department = departments[random.nextInt(departments.length)];
+            String purpose = purposes[random.nextInt(purposes.length)];
+            int status = getWeightedRandom(statuses, statusWeights);
+            LocalDateTime stockOutTime = getRandomDateTime2024();
 
             jdbcTemplate.update(
-                    "INSERT INTO logistics (order_id, logistics_company, tracking_number, ship_time, estimated_arrival_time, actual_arrival_time, status, receiver, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    orderId, logisticsCompany, trackingNumber, shipTime, estimatedArrival, actualArrival, status, receiver, shipTime
+                    "INSERT INTO stock_out_order (stock_out_number, user_id, department, purpose, status, stock_out_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    stockOutNumber, userId, department, purpose, status, stockOutTime, stockOutTime
             );
+            Long stockOutId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+
+            // 明细：同一单内零件不重复（受唯一索引约束）
+            int itemCount = 1 + random.nextInt(3);
+            Set<Long> usedPartIds = new HashSet<>();
+            for (int j = 0; j < itemCount && usedPartIds.size() < allParts.size(); j++) {
+                Map<String, Object> part = allParts.get(random.nextInt(allParts.size()));
+                Long partId = (Long) part.get("id");
+                if (usedPartIds.contains(partId)) continue;
+                usedPartIds.add(partId);
+
+                BigDecimal unitCost = (BigDecimal) part.get("purchase_price");
+                int quantity = 1 + random.nextInt(5);
+
+                jdbcTemplate.update(
+                        "INSERT INTO stock_out_detail (stock_out_id, part_id, quantity, unit_cost, create_time) VALUES (?, ?, ?, ?, ?)",
+                        stockOutId, partId, quantity, unitCost, stockOutTime
+                );
+            }
         }
     }
 

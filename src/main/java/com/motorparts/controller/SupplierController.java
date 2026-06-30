@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -34,6 +35,10 @@ public class SupplierController {
     @Operation(summary = "创建供应商")
     @PostMapping("/create")
     public Result<Supplier> create(@Valid @RequestBody Supplier supplier) {
+        // 手动设置deleted、createTime、updateTime字段
+        supplier.setDeleted(0);
+        supplier.setCreateTime(LocalDateTime.now());
+        supplier.setUpdateTime(LocalDateTime.now());
         boolean success = supplierService.save(supplier);
         if (!success) {
             return Result.error(ResultCode.DATA_EXISTS);
@@ -50,6 +55,8 @@ public class SupplierController {
             @Parameter(description = "供应商ID") @PathVariable Long id,
             @Valid @RequestBody Supplier supplier) {
         supplier.setId(id);
+        // 手动设置updateTime字段
+        supplier.setUpdateTime(LocalDateTime.now());
         boolean success = supplierService.updateById(supplier);
         if (!success) {
             return Result.error(ResultCode.DATA_NOT_EXISTS);

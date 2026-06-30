@@ -6,24 +6,19 @@ package com.motorparts.common.enums;
 public enum UserRoleEnum {
 
     /**
-     * 管理员
+     * 系统管理员（审核中枢，掌控库存变动）
      */
     ADMIN("admin", "管理员"),
 
     /**
-     * 采购员
+     * 采购专员（只管进货，不领用物料）
      */
-    PURCHASE("purchase", "采购员"),
+    PURCHASE("purchase", "采购专员"),
 
     /**
-     * 仓管员
+     * 领用人员（车间/生产领料，只做领料，不采购）
      */
-    WAREHOUSE("warehouse", "仓管员"),
-
-    /**
-     * 销售员
-     */
-    SALES("sales", "销售员");
+    REQUISITION("requisition", "领用人员");
 
     private final String code;
     private final String description;

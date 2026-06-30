@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(java -version)",
-      "Bash(mvn -version)"
+      "Bash(mvn -version)",
+      "WebFetch(domain:minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com)",
+      "Bash(mkdir -p \"d:/idea_space/MotorcyclePartsProcurementSystem/ecommerce-demo\")",
+      "Bash(grep -v \"\\\\.html$\")"
+    ],
+    "additionalDirectories": [
+      "d:\\idea_space\\MotorcyclePartsProcurementSystem"
     ]
   }
 }

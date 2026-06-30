@@ -45,6 +45,35 @@ public interface PurchaseOrderService extends IService<PurchaseOrder> {
     boolean updateOrderStatus(Long id, Integer status);
 
     /**
+     * 录入物流信息（功能 4.4/4.5），不影响明细与状态机
+     *
+     * @param id                   订单ID
+     * @param logisticsCompany     物流公司
+     * @param trackingNumber       运单号
+     * @param shipTime             发货时间
+     * @param expectedDeliveryDate 预计交货日期
+     * @return 是否成功
+     */
+    boolean updateLogistics(Long id, String logisticsCompany, String trackingNumber,
+                            java.time.LocalDateTime shipTime, LocalDate expectedDeliveryDate);
+
+    /**
+     * 提交入库申请（功能 4.6）：采购中(1) → 待入库审核(2)，不碰库存
+     *
+     * @param id 订单ID
+     * @return 是否成功
+     */
+    boolean submitInbound(Long id);
+
+    /**
+     * 标记已付款（功能 4.7）：paid 置 1，与 status 状态机互不干扰
+     *
+     * @param id 订单ID
+     * @return 是否成功
+     */
+    boolean markPaid(Long id);
+
+    /**
      * 获取订单统计信息
      *
      * @param startDate 开始日期

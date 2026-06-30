@@ -1,0 +1,158 @@
+<mxfile host="app.diagrams.net" version="24.0.0" type="device">
+  <diagram id="motorparts-l0-dfd" name="0层数据流图">
+    <mxGraphModel dx="1500" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="1960" math="0" background="#FFFFFF" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- =================================================================== -->
+        <!-- P1 登录认证                                                          -->
+        <!-- =================================================================== -->
+        <mxCell id="p1" value="P1&#10;登录认证" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#000000;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="470" y="40" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1L" value="全部登录用户&#10;(管理员/采购员/领用人员)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="65" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p1R" value="全部登录用户&#10;(管理员/采购员/领用人员)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="65" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d1a" value="D1 用户表&#10;(读: 校验账号密码)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="500" y="200" width="160" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ep1in" value="用户名 / 密码" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p1L" target="p1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep1out" value="token + 角色数组" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p1" target="p1R"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep1db" value="读" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p1" target="d1a"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- =================================================================== -->
+        <!-- P2 用户管理                                                          -->
+        <!-- =================================================================== -->
+        <mxCell id="p2" value="P2&#10;用户管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#000000;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="470" y="350" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p2L" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="375" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p2R" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="375" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d1b" value="D1 用户表&#10;(读/写: 账号·角色·状态)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="500" y="510" width="160" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ep2in" value="新建/编辑 / 分配角色 / 启停 / 重置密码" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p2L" target="p2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep2out" value="用户列表 / 操作结果" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p2" target="p2R"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep2db" value="读/写" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p2" target="d1b"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- =================================================================== -->
+        <!-- P3 供应商 / 零件档案管理                                             -->
+        <!-- =================================================================== -->
+        <mxCell id="p3" value="P3&#10;供应商 / 零件&#10;档案管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#000000;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="470" y="660" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p3L1" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="665" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p3L2" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="730" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p3R1" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="665" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p3R2" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="730" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d23" value="D2 供应商表 · D3 零件表&#10;(读/写: 档案·状态·锁定单价)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="475" y="830" width="210" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ep3in1" value="新建供应商/零件 (提交审核)" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="p3L1" target="p3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep3in2" value="审核通过/驳回 · 锁定单价 · 设预警值" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.7;" edge="1" parent="1" source="p3L2" target="p3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep3out1" value="档案列表 / 提交结果" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" parent="1" source="p3" target="p3R1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep3out2" value="审核结果" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" parent="1" source="p3" target="p3R2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep3db" value="读/写" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p3" target="d23"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- =================================================================== -->
+        <!-- P4 采购入库管理                                                      -->
+        <!-- =================================================================== -->
+        <mxCell id="p4" value="P4&#10;采购入库管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#000000;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="470" y="980" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p4L" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1005" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p4R" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="1005" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d4" value="D4 采购单 · 订单明细表&#10;(读/写: 单据·物流·总价·付款)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="350" y="1140" width="200" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="d3ref" value="D3 零件表&#10;(读: 锁定单价)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="610" y="1140" width="170" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ep4in" value="创建采购单 / 录物流 / 提交入库 / 标记付款" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p4L" target="p4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep4out" value="采购单状态 / 自动计算总价" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p4" target="p4R"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep4db" value="读/写" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.4;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p4" target="d4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep4db2" value="读 单价" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.6;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p4" target="d3ref"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- =================================================================== -->
+        <!-- P5 领用出库管理                                                      -->
+        <!-- =================================================================== -->
+        <mxCell id="p5" value="P5&#10;领用出库管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#000000;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1290" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p5L" value="领用人员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1315" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p5R" value="领用人员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="1315" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d6" value="D6 领用单 · 领用明细表&#10;(读/写: 单据·数量·用途)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="485" y="1450" width="190" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ep5in" value="创建领用单 / 提交出库申请 / 取消" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p5L" target="p5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep5out" value="领用单状态 / 出库结果" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p5" target="p5R"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep5db" value="读/写" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p5" target="d6"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- =================================================================== -->
+        <!-- P6 审核中心（库存变动闸门）                                         -->
+        <!-- =================================================================== -->
+        <mxCell id="p6" value="P6&#10;审核中心&#10;(库存变动闸门)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#000000;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1600" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p6L" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1635" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p6R1" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="1600" width="210" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="p6R2" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="1660" width="210" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="p6R3" value="领用人员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#000000;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="950" y="1720" width="210" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="d4b" value="D4 采购单&#10;(读/改状态)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="290" y="1790" width="160" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="d5" value="D5 库存表&#10;(写: 库存 +/−)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#000000;fontSize=12;fontStyle=1;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1790" width="160" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="d6b" value="D6 领用单&#10;(读/改状态)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#000000;fontSize=12;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="710" y="1790" width="160" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ep6in" value="审核入库申请 / 审核出库申请 (通过·驳回·先验库存)" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p6L" target="p6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6out1" value="审核结果 / 待办列表" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="p6" target="p6R1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6out2" value="入库审核结果 / 库存变动通知" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="p6" target="p6R2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6out3" value="出库审核结果" style="endArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" parent="1" source="p6" target="p6R3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6db1" value="读/改状态" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p6" target="d4b"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6db2" value="写 库存 +/−" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#C0392B;fontSize=13;fontStyle=1;strokeColor=#C0392B;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p6" target="d5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6db3" value="读/改状态" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontColor=#000000;fontSize=13;strokeColor=#5A5A5A;labelBackgroundColor=#FFFFFF;exitX=0.75;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="p6" target="d6b"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================= 图题 ================= -->
+        <mxCell id="title" value="图　摩托车零部件采购管理系统 —— 0 层数据流图（DFD）" style="text;html=1;align=center;verticalAlign=middle;fontColor=#000000;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1885" width="520" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

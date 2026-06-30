@@ -1,0 +1,154 @@
+<mxfile host="app.diagrams.net" version="24.0.0" type="device">
+  <diagram id="motorparts-func" name="系统功能模块图">
+    <mxGraphModel dx="1400" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2100" pageHeight="780" math="0" background="#10141B" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================= 根节点 ================= -->
+        <mxCell id="root1" value="摩托车零部件采购管理系统" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E4B6B;strokeColor=#6A93C0;fontColor=#FFFFFF;fontSize=16;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="900" y="40" width="260" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 一级模块（蓝色） ================= -->
+        <mxCell id="m1" value="登录认证" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3B5C;strokeColor=#3E6CA0;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="150" y="200" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="基础档案管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3B5C;strokeColor=#3E6CA0;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="480" y="200" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="采购入库管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3B5C;strokeColor=#3E6CA0;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="865" y="200" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="领用出库管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3B5C;strokeColor=#3E6CA0;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="200" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="审核与统计" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3B5C;strokeColor=#3E6CA0;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1690" y="200" width="100" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 二级功能（绿色竖框） ================= -->
+        <!-- M1 登录认证 -->
+        <mxCell id="s1" value="用户登录" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="角色权限校验" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="150" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="菜单/按钮权限" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="260" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- M2 基础档案管理 -->
+        <mxCell id="s4" value="供应商管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="370" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="零件管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="480" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="用户管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="590" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- M3 采购入库管理 -->
+        <mxCell id="s7" value="创建采购单" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="物流信息录入" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="810" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="提交入库申请" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s10" value="付款标记" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- M4 领用出库管理 -->
+        <mxCell id="s11" value="创建领用单" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s12" value="提交出库申请" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s13" value="领用明细查询" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- M5 审核与统计 -->
+        <mxCell id="s14" value="档案审核" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s15" value="入库审核（库存+）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s16" value="出库审核（库存−）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1690" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s17" value="库存预警" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1800" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s18" value="统计报表" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2F6B3A;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1910" y="390" width="90" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 三级功能（棕色竖框，挂在“用户管理”下） ================= -->
+        <mxCell id="t1" value="新增用户" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6E5A22;strokeColor=#B59A3C;fontColor=#FFFFFF;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="455" y="570" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="修改用户" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6E5A22;strokeColor=#B59A3C;fontColor=#FFFFFF;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="550" y="570" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="删除用户" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6E5A22;strokeColor=#B59A3C;fontColor=#FFFFFF;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="645" y="570" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" value="分配角色" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6E5A22;strokeColor=#B59A3C;fontColor=#FFFFFF;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="740" y="570" width="80" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 连线：根 -> 一级模块 ================= -->
+        <mxCell id="e0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#8DA0BC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="root1" target="m1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e0-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#8DA0BC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="root1" target="m2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e0-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#8DA0BC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="root1" target="m3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e0-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#8DA0BC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="root1" target="m4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e0-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#8DA0BC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="root1" target="m5"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================= 连线：一级模块 -> 二级功能 ================= -->
+        <mxCell id="e1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m1" target="s1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m1" target="s2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e1-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m1" target="s3"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="e2-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m2" target="s4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m2" target="s5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m2" target="s6"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="e3-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="s7"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="s8"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="s9"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="s10"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="e4-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m4" target="s11"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m4" target="s12"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m4" target="s13"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="e5-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m5" target="s14"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m5" target="s15"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m5" target="s16"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m5" target="s17"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#5C8A5C;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m5" target="s18"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================= 连线：用户管理 -> 三级功能 ================= -->
+        <mxCell id="et1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#A8922F;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="t1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="et2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#A8922F;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="t2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="et3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#A8922F;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="t3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="et4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#A8922F;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="t4"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================= 图题 ================= -->
+        <mxCell id="title" value="图 4　摩托车零部件采购管理系统功能模块图" style="text;html=1;align=center;verticalAlign=middle;fontColor=#FFFFFF;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="700" width="540" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

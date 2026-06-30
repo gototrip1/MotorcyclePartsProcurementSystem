@@ -4,11 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.motorparts.common.enums.ResultCode;
+import com.motorparts.common.exception.BusinessException;
+import com.motorparts.common.util.PasswordUtil;
 import com.motorparts.entity.User;
 import com.motorparts.mapper.UserMapper;
 import com.motorparts.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
 
 /**
  * 用户/员工服务实现类
@@ -86,5 +91,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         return baseMapper.selectCount(wrapper) > 0;
+    }
+
+    @Override
+    public boolean changePassword(Long id, String oldPassword, String newPassword) {
+        User user = getById(id);
+        if (user == null) {
+            throw new BusinessException(ResultCode.DATA_NOT_EXISTS, "用户不存在");
+        }
+        // BCrypt 校验原密码（与登录校验保持一致）
+        if (!PasswordUtil.matches(oldPassword, user.getPassword())) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED, "原密码不正确");
+        }
+
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.set(User::getPassword, PasswordUtil.encode(newPassword))
+               .set(User::getUpdateTime, LocalDateTime.now())
+               .eq(User::getId, id);
+
+        return update(wrapper);
     }
 }

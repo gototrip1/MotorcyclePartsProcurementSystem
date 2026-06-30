@@ -1,0 +1,53 @@
+<mxfile host="app.diagrams.net" version="24.0.0" type="device">
+  <diagram id="motorparts-context-dfd" name="顶层数据流图(0层DFD)">
+    <mxGraphModel dx="1500" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1480" pageHeight="460" math="0" background="#10141B" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================= 中心系统（黑色大方块） ================= -->
+        <mxCell id="sys" value="摩托车零部件&#10;采购管理系统" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#161616;strokeColor=#5A5A5A;fontColor=#FFFFFF;fontSize=26;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="560" y="60" width="360" height="320" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 左侧外部实体（输入端，绿色框） ================= -->
+        <mxCell id="inAdmin" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E5A34;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="170" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="inPurchase" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E5A34;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="170" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="inReq" value="领用人员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E5A34;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="170" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 右侧外部实体（输出端，绿色框） ================= -->
+        <mxCell id="outAdmin" value="管理员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E5A34;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="80" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="outPurchase" value="采购员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E5A34;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="190" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="outReq" value="领用人员" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2E5A34;strokeColor=#5CB85C;fontColor=#FFFFFF;fontSize=14;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="300" width="180" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- ================= 输入数据流：左侧角色 -> 系统 ================= -->
+        <mxCell id="fi1" value="登录 / 审核档案·入库·出库 / 用户管理 / 库存参数 / 报表查询" style="endArrow=classic;html=1;rounded=0;fontColor=#FFFFFF;fontSize=11;strokeColor=#9AA7B8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;" edge="1" parent="1" source="inAdmin" target="sys"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fi2" value="登录 / 供应商·零件建档 / 创建采购单·录物流 / 提交入库 / 标记付款" style="endArrow=classic;html=1;rounded=0;fontColor=#FFFFFF;fontSize=11;strokeColor=#9AA7B8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="inPurchase" target="sys"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fi3" value="登录 / 创建领用单 / 提交出库申请 / 查询领用状态" style="endArrow=classic;html=1;rounded=0;fontColor=#FFFFFF;fontSize=11;strokeColor=#9AA7B8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.85;entryDx=0;entryDy=0;" edge="1" parent="1" source="inReq" target="sys"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================= 输出数据流：系统 -> 右侧角色 ================= -->
+        <mxCell id="fo1" value="&lt;font color=&quot;#4F9BFF&quot;&gt;token&lt;/font&gt;+角色 / 各类数据 / 待办审核列表 / 统计报表" style="endArrow=classic;html=1;rounded=0;fontColor=#FFFFFF;fontSize=11;strokeColor=#9AA7B8;exitX=1;exitY=0.15;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="sys" target="outAdmin"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fo2" value="&lt;font color=&quot;#4F9BFF&quot;&gt;token&lt;/font&gt;+角色 / 采购单状态 / 入库审核结果 / 库存(只读)" style="endArrow=classic;html=1;rounded=0;fontColor=#FFFFFF;fontSize=11;strokeColor=#9AA7B8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="sys" target="outPurchase"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fo3" value="&lt;font color=&quot;#4F9BFF&quot;&gt;token&lt;/font&gt;+角色 / 领用单状态 / 出库审核结果 / 库存(只读)" style="endArrow=classic;html=1;rounded=0;fontColor=#FFFFFF;fontSize=11;strokeColor=#9AA7B8;exitX=1;exitY=0.85;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="sys" target="outReq"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ================= 图题 ================= -->
+        <mxCell id="title" value="图　摩托车零部件采购管理系统 —— 顶层数据流图（0 层 DFD / 上下文图）" style="text;html=1;align=center;verticalAlign=middle;fontColor=#FFFFFF;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="400" width="600" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -55,4 +55,14 @@ public interface UserService extends IService<User> {
      * @return 是否存在
      */
     boolean existsUsername(String username, Long excludeId);
+
+    /**
+     * 用户修改自己的密码：先校验原密码是否正确，正确后更新为新密码。
+     *
+     * @param id          用户ID
+     * @param oldPassword 原密码
+     * @param newPassword 新密码
+     * @return 是否成功
+     */
+    boolean changePassword(Long id, String oldPassword, String newPassword);
 }
